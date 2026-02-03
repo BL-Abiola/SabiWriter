@@ -15,37 +15,33 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { GenerationResult } from './generation-result';
 import { Skeleton } from './ui/skeleton';
+import { useSettings } from '@/context/settings-context';
 
 const formSchema = z.object({
   businessName: z.string().min(2, { message: 'Business name is required.' }),
   industry: z.string().min(3, { message: 'Industry is required.' }),
-  nigerianTone: z.boolean().default(true),
-  emojiPreference: z.boolean().default(true),
 });
 
 export function WhatsappGenerator() {
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<GenerateWhatsAppDescriptionOutput | null>(null);
   const { toast } = useToast();
+  const { nigerianTone, includeEmojis: emojiPreference } = useSettings();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       businessName: '',
       industry: '',
-      nigerianTone: true,
-      emojiPreference: true,
     },
   });
 
@@ -53,7 +49,8 @@ export function WhatsappGenerator() {
     setResult(null);
     const apiInput = {
       ...values,
-      tonePreference: values.nigerianTone ? 'Nigerian' : 'Friendly'
+      tonePreference: nigerianTone ? 'Nigerian' : 'Friendly',
+      emojiPreference,
     }
     
     startTransition(async () => {
@@ -102,39 +99,6 @@ export function WhatsappGenerator() {
                   </FormItem>
                 )}
               />
-
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="nigerianTone"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                      <div className="space-y-0.5">
-                        <FormLabel>Add Nigerian Flavour</FormLabel>
-                        <FormDescription>Use local slang and a friendly, Naija tone.</FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="emojiPreference"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                      <div className="space-y-0.5">
-                        <FormLabel>Include Emojis</FormLabel>
-                        <FormDescription>Make your description more engaging.</FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
               <Button type="submit" disabled={isPending} className="w-full">
                 <Sparkles className="mr-2 h-4 w-4" />
                 {isPending ? 'Generating...' : 'Generate Description'}

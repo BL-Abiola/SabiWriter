@@ -15,33 +15,30 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { GenerationResult } from './generation-result';
 import { Skeleton } from './ui/skeleton';
+import { useSettings } from '@/context/settings-context';
 
 const formSchema = z.object({
   businessName: z.string().min(2, { message: 'Business name is required.' }),
   businessDescription: z.string().min(10, { message: 'Please provide a brief description.' }),
   valueProposition: z.string().min(5, { message: 'Value proposition is required.' }),
   callToAction: z.string().min(3, { message: 'Call to action is required.' }),
-  nigerianTone: z.boolean().default(true),
-  includeEmojis: z.boolean().default(true),
 });
 
 export function InstagramGenerator() {
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<GenerateInstagramBioOutput | null>(null);
   const { toast } = useToast();
+  const { nigerianTone, includeEmojis } = useSettings();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,15 +47,14 @@ export function InstagramGenerator() {
       businessDescription: '',
       valueProposition: '',
       callToAction: '',
-      nigerianTone: true,
-      includeEmojis: true,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setResult(null);
     startTransition(async () => {
-      const { bio, error } = await generateInstagramBio(values);
+      const apiInput = { ...values, nigerianTone, includeEmojis };
+      const { bio, error } = await generateInstagramBio(apiInput);
       if (error) {
         toast({
           variant: 'destructive',
@@ -129,38 +125,6 @@ export function InstagramGenerator() {
                   </FormItem>
                 )}
               />
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="nigerianTone"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                      <div className="space-y-0.5">
-                        <FormLabel>Add Nigerian Flavour</FormLabel>
-                        <FormDescription>Use local slang and a friendly, Naija tone.</FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="includeEmojis"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                      <div className="space-y-0.5">
-                        <FormLabel>Include Emojis</FormLabel>
-                        <FormDescription>Make your bio pop with relevant emojis.</FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
               <Button type="submit" disabled={isPending} className="w-full">
                 <Sparkles className="mr-2 h-4 w-4" />
                 {isPending ? 'Generating...' : 'Generate Bio'}
