@@ -38,17 +38,17 @@ export function Settings() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Content Style</h3>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+        <div className="flex flex-row items-center justify-between rounded-lg border p-3">
             <div className="space-y-0.5">
                 <Label htmlFor="nigerian-tone-switch">Add Nigerian Flavour</Label>
                 <p className="text-sm text-muted-foreground">Use local slang and a friendly, Naija tone.</p>
             </div>
             <Switch id="nigerian-tone-switch" checked={nigerianTone} onCheckedChange={setNigerianTone} />
         </div>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+        <div className="flex flex-row items-center justify-between rounded-lg border p-3">
             <div className="space-y-0.5">
                 <Label htmlFor="include-emojis-switch">Include Emojis</Label>
                 <p className="text-sm text-muted-foreground">Make your bio pop with relevant emojis.</p>
@@ -59,7 +59,7 @@ export function Settings() {
 
       <div className="space-y-4">
         <h3 className="text-lg font-medium">API Settings</h3>
-        <div className="rounded-lg border p-4 space-y-4">
+        <div className="rounded-lg border p-3 space-y-3">
           <div className="space-y-2">
             <Label htmlFor="api-key-input">Google AI API Key</Label>
             <p className="text-sm text-muted-foreground">
