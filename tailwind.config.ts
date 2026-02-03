@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        code: ['monospace'],
+        sans: ['PT Sans', 'sans-serif'],
+        headline: ['Poppins', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -69,6 +69,7 @@ export default {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        '3xl': '1.5rem',
       },
       keyframes: {
         'accordion-down': {

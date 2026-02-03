@@ -40,7 +40,7 @@ export function Settings() {
   return (
     <div className="space-y-4">
       <div className="space-y-4">
-        <h3 className="text-lg font-medium">Content Style</h3>
+        <h3 className="font-headline text-lg font-medium">Content Style</h3>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3">
             <div className="space-y-0.5">
                 <Label htmlFor="nigerian-tone-switch">Add Nigerian Flavour</Label>
@@ -58,7 +58,7 @@ export function Settings() {
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-medium">API Settings</h3>
+        <h3 className="font-headline text-lg font-medium">API Settings</h3>
         <div className="rounded-lg border p-3 space-y-3">
           <div className="space-y-2">
             <Label htmlFor="api-key-input">Google AI API Key</Label>
