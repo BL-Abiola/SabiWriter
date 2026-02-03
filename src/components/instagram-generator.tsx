@@ -11,7 +11,7 @@ import {
   type GenerateInstagramBioOutput,
 } from '@/ai/flows/generate-instagram-bio';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -74,10 +74,7 @@ export function InstagramGenerator() {
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
       <Card className="shadow-md">
-        <CardHeader>
-          <CardTitle>Craft Your Instagram Bio</CardTitle>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
