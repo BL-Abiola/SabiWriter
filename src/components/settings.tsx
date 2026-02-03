@@ -7,11 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from '@/context/theme-context';
 
 export function Settings() {
   const { nigerianTone, setNigerianTone, includeEmojis, setIncludeEmojis } = useSettings();
   const [apiKey, setApiKey] = useState('');
   const { toast } = useToast();
+  const { theme, toggleTheme } = useTheme();
 
   const handleSaveApiKey = () => {
     if (!apiKey.trim()) {
@@ -38,7 +40,17 @@ export function Settings() {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-1">
+      <div className="space-y-2">
+        <h3 className="font-headline text-lg font-medium">Appearance</h3>
+        <div className="flex flex-row items-center justify-between rounded-lg border p-3">
+            <div className="space-y-0.5">
+                <Label htmlFor="dark-mode-switch">Dark Mode</Label>
+                <p className="text-sm text-muted-foreground">Toggle between light and dark themes.</p>
+            </div>
+            <Switch id="dark-mode-switch" checked={theme === 'dark'} onCheckedChange={toggleTheme} />
+        </div>
+      </div>
       <div className="space-y-2">
         <h3 className="font-headline text-lg font-medium">Content Style</h3>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3">
