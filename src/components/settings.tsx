@@ -3,7 +3,7 @@
 import { useSettings } from '@/context/settings-context';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { FormDescription, FormItem, FormLabel } from './ui/form';
+import { Label } from "@/components/ui/label";
 
 export function Settings() {
   const { nigerianTone, setNigerianTone, includeEmojis, setIncludeEmojis } = useSettings();
@@ -12,20 +12,20 @@ export function Settings() {
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <Card className="shadow-md">
             <CardContent className="pt-6 space-y-4">
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                <div className="flex flex-row items-center justify-between rounded-lg border p-3">
                     <div className="space-y-0.5">
-                    <FormLabel>Add Nigerian Flavour</FormLabel>
-                    <FormDescription>Use local slang and a friendly, Naija tone.</FormDescription>
+                        <Label>Add Nigerian Flavour</Label>
+                        <p className="text-sm text-muted-foreground">Use local slang and a friendly, Naija tone.</p>
                     </div>
                     <Switch checked={nigerianTone} onCheckedChange={setNigerianTone} />
-                </FormItem>
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                </div>
+                <div className="flex flex-row items-center justify-between rounded-lg border p-3">
                     <div className="space-y-0.5">
-                    <FormLabel>Include Emojis</FormLabel>
-                    <FormDescription>Make your bio pop with relevant emojis.</FormDescription>
+                        <Label>Include Emojis</Label>
+                        <p className="text-sm text-muted-foreground">Make your bio pop with relevant emojis.</p>
                     </div>
                     <Switch checked={includeEmojis} onCheckedChange={setIncludeEmojis} />
-                </FormItem>
+                </div>
             </CardContent>
         </Card>
         <div className="flex items-center justify-center p-8 bg-muted rounded-lg">
