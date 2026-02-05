@@ -20,20 +20,20 @@ export default function Home() {
             <Tabs defaultValue="instagram" className="w-full">
               <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="instagram">
-                  <Instagram className="mr-2 h-4 w-4" />
-                  Instagram Bio
+                  <Instagram className="h-5 w-5" />
+                  <span className="sr-only">Instagram Bio</span>
                 </TabsTrigger>
                 <TabsTrigger value="whatsapp">
-                  <MessageCircle className="mr-2 h-4 w-4" />
-                  WhatsApp Info
+                  <MessageCircle className="h-5 w-5" />
+                  <span className="sr-only">WhatsApp Info</span>
                 </TabsTrigger>
                 <TabsTrigger value="tagline">
-                  <Tags className="mr-2 h-4 w-4" />
-                  Tagline
+                  <Tags className="h-5 w-5" />
+                  <span className="sr-only">Tagline</span>
                 </TabsTrigger>
                 <TabsTrigger value="history">
-                  <History className="mr-2 h-4 w-4" />
-                  History
+                  <History className="h-5 w-5" />
+                  <span className="sr-only">History</span>
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="instagram" className="mt-6">
