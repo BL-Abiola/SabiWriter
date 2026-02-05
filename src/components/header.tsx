@@ -20,7 +20,7 @@ export function Header() {
             NaijaBizBio
           </h1>
           <p className="mt-1 text-base text-foreground/80">
-            AI-powered bios & taglines for your Nigerian business.
+            Ready to stand out online?
           </p>
         </div>
       </div>
