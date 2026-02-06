@@ -6,6 +6,18 @@ type Tone = 'Nigerian' | 'Professional' | 'Playful' | 'Witty' | 'Inspirational';
 export type GeneratorId = 'instagram' | 'whatsapp' | 'twitter' | 'tagline' | 'product';
 type EnabledGenerators = Record<GeneratorId, boolean>;
 
+const defaultSettings = {
+  tone: 'Nigerian' as Tone,
+  includeEmojis: true,
+  enabledGenerators: {
+    instagram: true,
+    whatsapp: true,
+    twitter: true,
+    tagline: true,
+    product: true,
+  },
+};
+
 type SettingsContextType = {
   tone: Tone;
   setTone: (value: Tone) => void;
@@ -13,24 +25,27 @@ type SettingsContextType = {
   setIncludeEmojis: (value: boolean) => void;
   enabledGenerators: EnabledGenerators;
   toggleGenerator: (id: GeneratorId) => void;
+  resetSettings: () => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [tone, setTone] = useState<Tone>('Nigerian');
-  const [includeEmojis, setIncludeEmojis] = useState(true);
-  const [enabledGenerators, setEnabledGenerators] = useState<EnabledGenerators>({
-    instagram: true,
-    whatsapp: true,
-    twitter: true,
-    tagline: true,
-    product: true,
-  });
+  const [tone, setTone] = useState<Tone>(defaultSettings.tone);
+  const [includeEmojis, setIncludeEmojis] = useState(defaultSettings.includeEmojis);
+  const [enabledGenerators, setEnabledGenerators] = useState<EnabledGenerators>(
+    defaultSettings.enabledGenerators
+  );
 
   const toggleGenerator = (id: GeneratorId) => {
     setEnabledGenerators(prev => ({...prev, [id]: !prev[id]}));
   };
+
+  const resetSettings = () => {
+    setTone(defaultSettings.tone);
+    setIncludeEmojis(defaultSettings.includeEmojis);
+    setEnabledGenerators(defaultSettings.enabledGenerators);
+  }
 
   return (
     <SettingsContext.Provider
@@ -41,6 +56,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         setIncludeEmojis,
         enabledGenerators,
         toggleGenerator,
+        resetSettings,
       }}
     >
       {children}

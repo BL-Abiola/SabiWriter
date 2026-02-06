@@ -7,6 +7,7 @@ type Theme = 'dark' | 'light';
 type ThemeContextType = {
   theme: Theme;
   toggleTheme: () => void;
+  resetTheme: () => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -37,8 +38,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
+  const resetTheme = () => {
+    setTheme('light');
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, resetTheme }}>
       {children}
     </ThemeContext.Provider>
   );

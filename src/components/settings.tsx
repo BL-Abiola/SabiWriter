@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from '@/context/theme-context';
+import { useHistory } from '@/context/history-context';
 import {
   Select,
   SelectContent,
@@ -19,6 +20,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DialogClose } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog";
+import {
     Palette,
     BotMessageSquare,
     SlidersHorizontal,
@@ -26,6 +38,7 @@ import {
     Info,
     Twitter,
     Mail,
+    RotateCcw,
 } from 'lucide-react';
 
 const socialGeneratorOptions: {id: GeneratorId, label: string}[] = [
@@ -44,10 +57,12 @@ export function Settings() {
     tone, setTone, 
     includeEmojis, setIncludeEmojis,
     enabledGenerators, toggleGenerator,
+    resetSettings,
   } = useSettings();
   const [apiKey, setApiKey] = useState('');
   const { toast } = useToast();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, resetTheme } = useTheme();
+  const { clearHistory } = useHistory();
 
   const handleSaveApiKey = () => {
     if (!apiKey.trim()) {
@@ -73,9 +88,18 @@ export function Settings() {
     });
   };
 
+  const handleResetSettings = () => {
+    resetSettings();
+    resetTheme();
+    toast({
+      title: 'Settings Reset',
+      description: 'All settings have been restored to their default values.',
+    });
+  };
+
   return (
     <Tabs defaultValue="about" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="about">
                 <Info className="md:mr-2 h-4 w-4" />
                 <span className="hidden md:inline">About</span>
@@ -95,6 +119,10 @@ export function Settings() {
             <TabsTrigger value="style">
                 <BotMessageSquare className="md:mr-2 h-4 w-4" />
                 <span className="hidden md:inline">Style</span>
+            </TabsTrigger>
+            <TabsTrigger value="reset">
+                <RotateCcw className="md:mr-2 h-4 w-4" />
+                <span className="hidden md:inline">Reset</span>
             </TabsTrigger>
         </TabsList>
         <TabsContent value="about" className="pt-6">
@@ -192,8 +220,8 @@ export function Settings() {
         </TabsContent>
         <TabsContent value="generators" className="pt-6">
             <div className="max-h-[250px] space-y-4 overflow-y-auto p-1">
-                <div className="space-y-3">
-                    <Label>Social Platforms</Label>
+                <div className="space-y-3 rounded-lg border p-4">
+                    <Label className="font-medium">Social Platforms</Label>
                     <div className="space-y-3">
                         {socialGeneratorOptions.map(gen => (
                             <div key={gen.id} className="flex flex-row items-center justify-between">
@@ -207,9 +235,8 @@ export function Settings() {
                         ))}
                     </div>
                 </div>
-                <Separator />
-                <div className="space-y-3">
-                    <Label>Other Tools</Label>
+                <div className="space-y-3 rounded-lg border p-4">
+                    <Label className="font-medium">Other Tools</Label>
                     <div className="space-y-3">
                         {otherGeneratorOptions.map(gen => (
                             <div key={gen.id} className="flex flex-row items-center justify-between">
@@ -232,7 +259,7 @@ export function Settings() {
         </TabsContent>
         <TabsContent value="style" className="pt-6">
             <div className="max-h-[250px] space-y-3 overflow-y-auto p-1">
-              <div className="space-y-4">
+              <div className="space-y-4 rounded-lg border p-4">
                 <div className="flex flex-row items-center justify-between">
                     <Label>Tone of Voice</Label>
                     <Select value={tone} onValueChange={setTone}>
@@ -253,6 +280,65 @@ export function Settings() {
                     <Switch id="include-emojis-switch" checked={includeEmojis} onCheckedChange={setIncludeEmojis} />
                 </div>
               </div>
+            </div>
+            <div className="mt-4 border-t pt-4">
+                <DialogClose asChild>
+                    <Button className="w-full">Done</Button>
+                </DialogClose>
+            </div>
+        </TabsContent>
+        <TabsContent value="reset" className="pt-6">
+            <div className="max-h-[250px] space-y-4 overflow-y-auto p-1">
+                <div className="rounded-lg border border-destructive p-4">
+                    <div className="mb-4">
+                        <Label className="text-base font-bold text-destructive">Danger Zone</Label>
+                        <p className="text-sm text-muted-foreground">
+                            These actions are permanent and cannot be undone.
+                        </p>
+                    </div>
+
+                    <div className="space-y-2">
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="outline" className="w-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground">
+                                    Reset All Settings
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you sure you want to reset settings?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This will restore all appearance and generation settings to their original defaults.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={handleResetSettings} className="bg-destructive hover:bg-destructive/90">Reset</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                        
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="outline" className="w-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground">
+                                    Clear Generation History
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you sure you want to clear history?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This will permanently delete your entire generation history.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={clearHistory} className="bg-destructive hover:bg-destructive/90">Clear History</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
+                </div>
             </div>
             <div className="mt-4 border-t pt-4">
                 <DialogClose asChild>
