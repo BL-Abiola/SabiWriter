@@ -8,9 +8,16 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from '@/context/theme-context';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export function Settings() {
-  const { nigerianTone, setNigerianTone, includeEmojis, setIncludeEmojis } = useSettings();
+  const { tone, setTone, includeEmojis, setIncludeEmojis } = useSettings();
   const [apiKey, setApiKey] = useState('');
   const { toast } = useToast();
   const { theme, toggleTheme } = useTheme();
@@ -40,7 +47,7 @@ export function Settings() {
   };
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-4">
       <div className="space-y-2">
         <h3 className="font-headline text-lg font-medium">Appearance</h3>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3">
@@ -53,19 +60,32 @@ export function Settings() {
       </div>
       <div className="space-y-2">
         <h3 className="font-headline text-lg font-medium">Content Style</h3>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3">
-            <div className="space-y-0.5">
-                <Label htmlFor="nigerian-tone-switch">Add Nigerian Flavour</Label>
-                <p className="text-sm text-muted-foreground">Use Nigerian slang and tone.</p>
-            </div>
-            <Switch id="nigerian-tone-switch" checked={nigerianTone} onCheckedChange={setNigerianTone} />
-        </div>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3">
-            <div className="space-y-0.5">
-                <Label htmlFor="include-emojis-switch">Include Emojis</Label>
-                <p className="text-sm text-muted-foreground">Add emojis for personality.</p>
-            </div>
-            <Switch id="include-emojis-switch" checked={includeEmojis} onCheckedChange={setIncludeEmojis} />
+        <div className="rounded-lg border p-3 space-y-3">
+          <div className="flex flex-row items-center justify-between">
+              <div className="space-y-0.5">
+                  <Label>Tone of Voice</Label>
+                  <p className="text-sm text-muted-foreground">Set the personality for the AI.</p>
+              </div>
+              <Select value={tone} onValueChange={setTone}>
+                  <SelectTrigger className="w-[140px]">
+                      <SelectValue placeholder="Select tone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                      <SelectItem value="Nigerian">Nigerian</SelectItem>
+                      <SelectItem value="Professional">Professional</SelectItem>
+                      <SelectItem value="Playful">Playful</SelectItem>
+                      <SelectItem value="Witty">Witty</SelectItem>
+                      <SelectItem value="Inspirational">Inspirational</SelectItem>
+                  </SelectContent>
+              </Select>
+          </div>
+          <div className="flex flex-row items-center justify-between">
+              <div className="space-y-0.5">
+                  <Label htmlFor="include-emojis-switch">Include Emojis</Label>
+                  <p className="text-sm text-muted-foreground">Add emojis for personality.</p>
+              </div>
+              <Switch id="include-emojis-switch" checked={includeEmojis} onCheckedChange={setIncludeEmojis} />
+          </div>
         </div>
       </div>
 

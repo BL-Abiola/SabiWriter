@@ -7,8 +7,8 @@ import { z } from 'zod';
 import { Sparkles } from 'lucide-react';
 
 import {
-  generateShortTagline,
-} from '@/ai/flows/generate-short-tagline';
+  generateProductDescription,
+} from '@/ai/flows/generate-product-description';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -19,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useSettings } from '@/context/settings-context';
@@ -27,10 +28,11 @@ import { GenerationResultDialog } from './generation-result-dialog';
 import { SkeletonLoader } from './skeleton-loader';
 
 const formSchema = z.object({
-  businessDescription: z.string().min(10, { message: 'Please provide a brief description.' }),
+  productName: z.string().min(2, { message: 'Product name is required.' }),
+  productFeatures: z.string().min(10, { message: 'Please provide some features or a brief description.' }),
 });
 
-export function TaglineGenerator() {
+export function ProductDescriptionGenerator() {
   const [isPending, startTransition] = useTransition();
   const [generation, setGeneration] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -41,14 +43,15 @@ export function TaglineGenerator() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      businessDescription: '',
+      productName: '',
+      productFeatures: '',
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
       const apiInput = { ...values, tone, includeEmojis };
-      const { tagline, error } = await generateShortTagline(apiInput);
+      const { description, error } = await generateProductDescription(apiInput);
       if (error) {
         toast({
           variant: 'destructive',
@@ -57,9 +60,9 @@ export function TaglineGenerator() {
         });
         return;
       }
-      if (tagline) {
-        addHistoryItem({ type: 'Tagline', text: tagline });
-        setGeneration(tagline);
+      if (description) {
+        addHistoryItem({ type: 'Product Description', text: description });
+        setGeneration(description);
         setIsDialogOpen(true);
         form.reset();
       }
@@ -77,15 +80,25 @@ export function TaglineGenerator() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
-                  name="businessDescription"
+                  name="productName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Describe your business</FormLabel>
+                      <FormLabel>Product Name</FormLabel>
                       <FormControl>
-                        <Textarea
-                          placeholder="e.g., An online store that sells handmade leather sandals for men and women."
-                          {...field}
-                        />
+                        <Input placeholder="e.g., Aso-Oke Throw Pillow" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="productFeatures"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Product Features & Details</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="e.g., Handwoven fabric from Ondo state, 18x18 inches, available in 3 colors, perfect for modern homes." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -93,7 +106,7 @@ export function TaglineGenerator() {
                 />
                 <Button type="submit" disabled={isPending} className="w-full">
                   <Sparkles className="mr-2 h-4 w-4" />
-                  {isPending ? 'Generating...' : 'Generate Tagline'}
+                  {isPending ? 'Generating...' : 'Generate Description'}
                 </Button>
               </form>
             </Form>
@@ -102,11 +115,11 @@ export function TaglineGenerator() {
       </Card>
       {generation && (
         <GenerationResultDialog
-          isOpen={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-          title="Your New Tagline"
-          description="Short, sweet, and memorable."
-          text={generation}
+            isOpen={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            title="Your Product Description"
+            description="Here are a few options to make your product shine."
+            text={generation}
         />
       )}
     </>

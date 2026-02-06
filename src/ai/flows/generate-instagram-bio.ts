@@ -16,7 +16,7 @@ const GenerateInstagramBioInputSchema = z.object({
   businessDescription: z.string().describe('A description of the business.'),
   valueProposition: z.string().describe('The value proposition of the business.'),
   callToAction: z.string().describe('A call to action for the bio.'),
-  nigerianTone: z.boolean().describe('Whether to use a Nigerian tone.'),
+  tone: z.string().describe('The desired tone for the bio.'),
   includeEmojis: z.boolean().describe('Whether to include emojis.'),
 });
 export type GenerateInstagramBioInput = z.infer<typeof GenerateInstagramBioInputSchema>;
@@ -34,7 +34,7 @@ const prompt = ai.definePrompt({
   name: 'generateInstagramBioPrompt',
   input: {schema: GenerateInstagramBioInputSchema},
   output: {schema: GenerateInstagramBioOutputSchema},
-  prompt: `You are a world-class social media copywriter specializing in viral Instagram bios for Nigerian businesses.
+  prompt: `You are a world-class social media copywriter specializing in viral Instagram bios.
 
 Your task is to generate **3 unique Instagram bio options** based on the details provided. Each bio must be under 150 characters.
 
@@ -50,7 +50,7 @@ Your task is to generate **3 unique Instagram bio options** based on the details
 *   **Call to Action:** {{{callToAction}}}
 
 **Style Guidelines:**
-*   **Tone:** {{#if nigerianTone}}Use a vibrant, friendly Nigerian tone. Feel free to use popular, positive slang like 'No wahala', 'Sabi', or 'Naija-made'. Keep it authentic and not over-the-top.{{else}}Use a modern, professional, and globally appealing tone.{{/if}}
+*   **Tone:** Your tone should be: **{{{tone}}}**. If the tone is 'Nigerian', feel free to use popular, positive slang like 'No wahala', 'Sabi', or 'Naija-made'. Keep it authentic and not over-the-top.
 *   **Emojis:** {{#if includeEmojis}}Weave in relevant emojis to add personality and break up the text.{{else}}Do not use any emojis.{{/if}}
 
 Format your response as a single block of text. Present the 3 bios as a numbered list, separated by a blank line.

@@ -15,11 +15,10 @@ const GenerateShortTaglineInputSchema = z.object({
   businessDescription: z
     .string()
     .describe('A brief description of the business or product.'),
-  nigerianTone: z
-    .boolean()
-    .default(false)
-    .describe('Whether to use Nigerian tone and slang.'),
-  useEmoji: z
+  tone: z
+    .string()
+    .describe('The desired tone for the tagline.'),
+  includeEmojis: z
     .boolean()
     .default(true)
     .describe('Whether to include relevant emojis.'),
@@ -53,8 +52,8 @@ Your task is to generate **3 unique tagline options** based on the business desc
 {{{businessDescription}}}
 
 **Style Guidelines:**
-*   **Tone:** {{#if nigerianTone}}Use a creative and energetic Nigerian tone. Feel free to use clever slang.{{else}}Use a professional, modern, and impactful tone.{{/if}}
-*   **Emojis:** {{#if useEmoji}}If it fits, you can add a single, powerful emoji at the end.{{else}}Do not include any emojis.{{/if}}
+*   **Tone:** Your tone should be: **{{{tone}}}**.
+*   **Emojis:** {{#if includeEmojis}}If it fits, you can add a single, powerful emoji at the end.{{else}}Do not include any emojis.{{/if}}
 
 The tagline should perfectly encapsulate the business's essence.
 

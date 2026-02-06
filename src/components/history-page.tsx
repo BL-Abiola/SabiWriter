@@ -29,6 +29,10 @@ export function HistoryPage() {
         return 'WhatsApp Description';
       case 'Tagline':
         return 'Tagline';
+      case 'Product Description':
+        return 'Product Description';
+      case 'Twitter Post':
+        return 'Twitter Post';
     }
   }
 

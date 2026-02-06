@@ -24,6 +24,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useSettings } from '@/context/settings-context';
 import { useHistory } from '@/context/history-context';
 import { GenerationResultDialog } from './generation-result-dialog';
+import { SkeletonLoader } from './skeleton-loader';
 
 const formSchema = z.object({
   businessName: z.string().min(2, { message: 'Business name is required.' }),
@@ -35,7 +36,7 @@ export function WhatsappGenerator() {
   const [generation, setGeneration] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
-  const { nigerianTone, includeEmojis } = useSettings();
+  const { tone, includeEmojis } = useSettings();
   const { addHistoryItem } = useHistory();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,7 +51,7 @@ export function WhatsappGenerator() {
     startTransition(async () => {
       const apiInput = {
         ...values,
-        nigerianTone,
+        tone,
         includeEmojis,
       };
       const { description, error } = await generateWhatsAppDescription(apiInput);
@@ -75,40 +76,44 @@ export function WhatsappGenerator() {
     <>
       <Card className="shadow-md max-w-2xl mx-auto">
         <CardContent className="pt-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="businessName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Business Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Tunde's Tech Hub" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="industry"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Industry</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Gadgets & Electronics" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" disabled={isPending} className="w-full">
-                <Sparkles className="mr-2 h-4 w-4" />
-                {isPending ? 'Generating...' : 'Generate Description'}
-              </Button>
-            </form>
-          </Form>
+          {isPending ? (
+            <SkeletonLoader />
+          ) : (
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="businessName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Tunde's Tech Hub" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="industry"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Industry</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Gadgets & Electronics" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" disabled={isPending} className="w-full">
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  {isPending ? 'Generating...' : 'Generate Description'}
+                </Button>
+              </form>
+            </Form>
+          )}
         </CardContent>
       </Card>
       {generation && (

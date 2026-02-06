@@ -5,7 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export type HistoryItem = {
   id: string;
-  type: 'Instagram' | 'WhatsApp' | 'Tagline';
+  type: 'Instagram' | 'WhatsApp' | 'Tagline' | 'Product Description' | 'Twitter Post';
   text: string;
   timestamp: string;
 };

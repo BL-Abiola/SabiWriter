@@ -2,9 +2,11 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 
+type Tone = 'Nigerian' | 'Professional' | 'Playful' | 'Witty' | 'Inspirational';
+
 type SettingsContextType = {
-  nigerianTone: boolean;
-  setNigerianTone: (value: boolean) => void;
+  tone: Tone;
+  setTone: (value: Tone) => void;
   includeEmojis: boolean;
   setIncludeEmojis: (value: boolean) => void;
 };
@@ -12,14 +14,14 @@ type SettingsContextType = {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [nigerianTone, setNigerianTone] = useState(true);
+  const [tone, setTone] = useState<Tone>('Nigerian');
   const [includeEmojis, setIncludeEmojis] = useState(true);
 
   return (
     <SettingsContext.Provider
       value={{
-        nigerianTone,
-        setNigerianTone,
+        tone,
+        setTone,
         includeEmojis,
         setIncludeEmojis,
       }}

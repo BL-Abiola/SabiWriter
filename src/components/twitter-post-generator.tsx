@@ -7,8 +7,8 @@ import { z } from 'zod';
 import { Sparkles } from 'lucide-react';
 
 import {
-  generateShortTagline,
-} from '@/ai/flows/generate-short-tagline';
+  generateTwitterPost,
+} from '@/ai/flows/generate-twitter-post';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -27,10 +27,10 @@ import { GenerationResultDialog } from './generation-result-dialog';
 import { SkeletonLoader } from './skeleton-loader';
 
 const formSchema = z.object({
-  businessDescription: z.string().min(10, { message: 'Please provide a brief description.' }),
+  topic: z.string().min(10, { message: 'Please provide a topic for the post.' }),
 });
 
-export function TaglineGenerator() {
+export function TwitterPostGenerator() {
   const [isPending, startTransition] = useTransition();
   const [generation, setGeneration] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -41,14 +41,14 @@ export function TaglineGenerator() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      businessDescription: '',
+      topic: '',
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
       const apiInput = { ...values, tone, includeEmojis };
-      const { tagline, error } = await generateShortTagline(apiInput);
+      const { post, error } = await generateTwitterPost(apiInput);
       if (error) {
         toast({
           variant: 'destructive',
@@ -57,9 +57,9 @@ export function TaglineGenerator() {
         });
         return;
       }
-      if (tagline) {
-        addHistoryItem({ type: 'Tagline', text: tagline });
-        setGeneration(tagline);
+      if (post) {
+        addHistoryItem({ type: 'Twitter Post', text: post });
+        setGeneration(post);
         setIsDialogOpen(true);
         form.reset();
       }
@@ -77,13 +77,13 @@ export function TaglineGenerator() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
-                  name="businessDescription"
+                  name="topic"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Describe your business</FormLabel>
+                      <FormLabel>What is the post about?</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="e.g., An online store that sells handmade leather sandals for men and women."
+                          placeholder="e.g., Announcing a flash sale on all our new shoes, 50% off for 24 hours!"
                           {...field}
                         />
                       </FormControl>
@@ -93,7 +93,7 @@ export function TaglineGenerator() {
                 />
                 <Button type="submit" disabled={isPending} className="w-full">
                   <Sparkles className="mr-2 h-4 w-4" />
-                  {isPending ? 'Generating...' : 'Generate Tagline'}
+                  {isPending ? 'Generating...' : 'Generate Post'}
                 </Button>
               </form>
             </Form>
@@ -104,8 +104,8 @@ export function TaglineGenerator() {
         <GenerationResultDialog
           isOpen={isDialogOpen}
           onOpenChange={setIsDialogOpen}
-          title="Your New Tagline"
-          description="Short, sweet, and memorable."
+          title="Your Twitter Post"
+          description="Ready to go viral!"
           text={generation}
         />
       )}
