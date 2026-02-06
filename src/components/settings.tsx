@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { useSettings } from '@/context/settings-context';
+import { useSettings, GeneratorId } from '@/context/settings-context';
 import { Switch } from '@/components/ui/switch';
 import { Label } from "@/components/ui/label";
 import { Input } from '@/components/ui/input';
@@ -17,8 +17,20 @@ import {
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+const generatorOptions: {id: GeneratorId, label: string}[] = [
+    { id: 'instagram', label: 'Instagram Bio' },
+    { id: 'whatsapp', label: 'WhatsApp Description' },
+    { id: 'twitter', label: 'X / Twitter Post' },
+    { id: 'tagline', label: 'Tagline Generator' },
+    { id: 'product', label: 'Product Description' },
+];
+
 export function Settings() {
-  const { tone, setTone, includeEmojis, setIncludeEmojis } = useSettings();
+  const { 
+    tone, setTone, 
+    includeEmojis, setIncludeEmojis,
+    enabledGenerators, toggleGenerator,
+  } = useSettings();
   const [apiKey, setApiKey] = useState('');
   const { toast } = useToast();
   const { theme, toggleTheme } = useTheme();
@@ -49,9 +61,10 @@ export function Settings() {
 
   return (
     <Tabs defaultValue="appearance" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="appearance">Appearance</TabsTrigger>
             <TabsTrigger value="style">Style</TabsTrigger>
+            <TabsTrigger value="generators">Generators</TabsTrigger>
             <TabsTrigger value="api">API</TabsTrigger>
         </TabsList>
         <TabsContent value="appearance" className="pt-6">
@@ -92,6 +105,30 @@ export function Settings() {
                   </div>
                   <Switch id="include-emojis-switch" checked={includeEmojis} onCheckedChange={setIncludeEmojis} />
               </div>
+            </div>
+        </TabsContent>
+        <TabsContent value="generators" className="pt-6">
+            <div className="rounded-lg border p-3 space-y-3">
+                <div className="space-y-1 mb-4">
+                    <Label>Enabled Generators</Label>
+                    <p className="text-sm text-muted-foreground">
+                        Choose which content generators to show in the app.
+                    </p>
+                </div>
+                <div className="space-y-2">
+                    {generatorOptions.map(gen => (
+                        <div key={gen.id} className="flex flex-row items-center justify-between rounded-lg border p-3">
+                            <div className="space-y-0.5">
+                                <Label htmlFor={`${gen.id}-switch`}>{gen.label}</Label>
+                            </div>
+                            <Switch
+                                id={`${gen.id}-switch`}
+                                checked={enabledGenerators[gen.id]}
+                                onCheckedChange={() => toggleGenerator(gen.id)}
+                            />
+                        </div>
+                    ))}
+                </div>
             </div>
         </TabsContent>
         <TabsContent value="api" className="pt-6">

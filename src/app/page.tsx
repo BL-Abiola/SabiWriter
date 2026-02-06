@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { SettingsProvider } from '@/context/settings-context';
+import { SettingsProvider, useSettings, GeneratorId } from '@/context/settings-context';
 import { HistoryProvider } from '@/context/history-context';
 import { TaglineGenerator } from '@/components/tagline-generator';
 import { ProductDescriptionGenerator } from '@/components/product-description-generator';
@@ -24,6 +24,18 @@ type View = 'instagram' | 'whatsapp' | 'twitter' | 'tagline' | 'product' | 'hist
 
 function AppContent() {
   const [activeView, setActiveView] = useState<View>('instagram');
+  const { enabledGenerators } = useSettings();
+
+  useEffect(() => {
+    // If the active view is no longer enabled, switch to the first available one.
+    if (activeView !== 'history' && !enabledGenerators[activeView as GeneratorId]) {
+        const firstEnabled = Object.keys(enabledGenerators).find(
+            key => enabledGenerators[key as GeneratorId]
+        ) as View | undefined;
+        
+        setActiveView(firstEnabled || 'history');
+    }
+  }, [enabledGenerators, activeView]);
 
   const renderContent = () => {
     switch (activeView) {
@@ -44,13 +56,15 @@ function AppContent() {
     }
   }
 
-  const isSocialView = ['instagram', 'whatsapp', 'twitter'].includes(activeView);
+  const socialGenerators: GeneratorId[] = ['instagram', 'whatsapp', 'twitter'];
+  const isSocialView = socialGenerators.includes(activeView as GeneratorId);
+  const isAnySocialEnabled = socialGenerators.some(id => enabledGenerators[id]);
 
   const navButtonClasses = (isActive: boolean) =>
     cn(
       "flex-1 items-center justify-center text-base py-3 rounded-lg transition-all duration-200 ease-in-out font-medium",
       isActive
-        ? 'shadow-lg'
+        ? 'bg-primary text-primary-foreground shadow-lg hover:bg-primary/90'
         : 'bg-transparent text-muted-foreground hover:bg-primary/10 hover:text-primary'
     );
 
@@ -61,48 +75,62 @@ function AppContent() {
         <Header />
         
         <div className="flex w-full items-center rounded-2xl bg-muted p-1.5 my-8 gap-1.5">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="default" className={navButtonClasses(isSocialView)}>
-                  <Share2 className={navIconClasses} />
-                  <span className="hidden md:inline">Social</span>
-                  <ChevronDown className="h-4 w-4 ml-1 hidden md:inline" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={() => setActiveView('instagram')}>
-                  <Instagram className="mr-2 h-4 w-4" />
-                  <span>Instagram</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setActiveView('whatsapp')}>
-                  <MessageCircle className="mr-2 h-4 w-4" />
-                  <span>WhatsApp</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setActiveView('twitter')}>
-                  <Twitter className="mr-2 h-4 w-4" />
-                  <span>X / Twitter</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {isAnySocialEnabled && (
+                <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className={navButtonClasses(isSocialView)}>
+                    <Share2 className={navIconClasses} />
+                    <span className="hidden md:inline">Social</span>
+                    <ChevronDown className="h-4 w-4 ml-1 hidden md:inline" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                    {enabledGenerators.instagram && (
+                        <DropdownMenuItem onClick={() => setActiveView('instagram')}>
+                        <Instagram className="mr-2 h-4 w-4" />
+                        <span>Instagram</span>
+                        </DropdownMenuItem>
+                    )}
+                    {enabledGenerators.whatsapp && (
+                        <DropdownMenuItem onClick={() => setActiveView('whatsapp')}>
+                        <MessageCircle className="mr-2 h-4 w-4" />
+                        <span>WhatsApp</span>
+                        </DropdownMenuItem>
+                    )}
+                    {enabledGenerators.twitter && (
+                        <DropdownMenuItem onClick={() => setActiveView('twitter')}>
+                        <Twitter className="mr-2 h-4 w-4" />
+                        <span>X / Twitter</span>
+                        </DropdownMenuItem>
+                    )}
+                </DropdownMenuContent>
+                </DropdownMenu>
+            )}
 
+            {enabledGenerators.tagline && (
+                <Button 
+                    variant="ghost"
+                    onClick={() => setActiveView('tagline')}
+                    className={navButtonClasses(activeView === 'tagline')}
+                >
+                    <Tags className={navIconClasses} />
+                    <span className="hidden md:inline">Tagline</span>
+                </Button>
+            )}
+
+            {enabledGenerators.product && (
+                <Button 
+                    variant="ghost"
+                    onClick={() => setActiveView('product')}
+                    className={navButtonClasses(activeView === 'product')}
+                >
+                    <ShoppingBag className={navIconClasses} />
+                    <span className="hidden md:inline">Product</span>
+                </Button>
+            )}
+            
             <Button 
-                variant="default"
-                onClick={() => setActiveView('tagline')}
-                className={navButtonClasses(activeView === 'tagline')}
-            >
-                <Tags className={navIconClasses} />
-                <span className="hidden md:inline">Tagline</span>
-            </Button>
-            <Button 
-                variant="default"
-                onClick={() => setActiveView('product')}
-                className={navButtonClasses(activeView === 'product')}
-            >
-                <ShoppingBag className={navIconClasses} />
-                <span className="hidden md:inline">Product</span>
-            </Button>
-            <Button 
-                variant="default"
+                variant="ghost"
                 onClick={() => setActiveView('history')}
                 className={navButtonClasses(activeView === 'history')}
             >
