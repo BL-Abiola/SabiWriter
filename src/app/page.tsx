@@ -17,8 +17,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from '@/lib/utils';
 import { History, Share2, ShoppingBag, Tags, ChevronDown, Instagram, MessageCircle, Twitter } from 'lucide-react';
+import { BottomNavigation } from '@/components/bottom-navigation';
 
 type View = 'instagram' | 'whatsapp' | 'twitter' | 'tagline' | 'product' | 'history';
 
@@ -46,23 +46,18 @@ function AppContent() {
 
   const isSocialView = ['instagram', 'whatsapp', 'twitter'].includes(activeView);
 
-  const navItemClasses = "w-full";
-  const activeClasses = "bg-background text-foreground shadow-sm hover:bg-background";
-
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="w-full pb-24 md:pb-0">
         <Header />
         
-        <div className="grid w-full grid-cols-4 gap-1 rounded-md bg-muted p-1 text-muted-foreground mb-6">
+        {/* Desktop Navigation */}
+        <div className="hidden md:grid w-full grid-cols-4 gap-2 my-8">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className={cn(navItemClasses, isSocialView && activeClasses)}
-                >
-                  <Share2 className="h-4 w-4 md:mr-2" />
-                  <span className="hidden md:inline">Social</span>
-                  <ChevronDown className="h-4 w-4 ml-1 hidden md:inline"/>
+                <Button variant={isSocialView ? 'default' : 'outline'} className="w-full justify-center text-base py-6 shadow-sm">
+                  <Share2 className="h-5 w-5 mr-3" />
+                  <span>Social</span>
+                  <ChevronDown className="h-4 w-4 ml-2"/>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
@@ -82,34 +77,37 @@ function AppContent() {
             </DropdownMenu>
 
             <Button 
-                variant="ghost" 
-                className={cn(navItemClasses, activeView === 'tagline' && activeClasses)}
+                variant={activeView === 'tagline' ? 'default' : 'outline'}
                 onClick={() => setActiveView('tagline')}
+                className="w-full justify-center text-base py-6 shadow-sm"
             >
-                <Tags className="h-4 w-4 md:mr-2" />
-                <span className="hidden md:inline">Tagline</span>
+                <Tags className="h-5 w-5 mr-3" />
+                <span>Tagline</span>
             </Button>
             <Button 
-                variant="ghost" 
-                className={cn(navItemClasses, activeView === 'product' && activeClasses)}
+                variant={activeView === 'product' ? 'default' : 'outline'}
                 onClick={() => setActiveView('product')}
+                className="w-full justify-center text-base py-6 shadow-sm"
             >
-                <ShoppingBag className="h-4 w-4 md:mr-2" />
-                <span className="hidden md:inline">Product</span>
+                <ShoppingBag className="h-5 w-5 mr-3" />
+                <span>Product</span>
             </Button>
             <Button 
-                variant="ghost" 
-                className={cn(navItemClasses, activeView === 'history' && activeClasses)}
+                variant={activeView === 'history' ? 'default' : 'outline'}
                 onClick={() => setActiveView('history')}
+                className="w-full justify-center text-base py-6 shadow-sm"
             >
-                <History className="h-4 w-4 md:mr-2" />
-                <span className="hidden md:inline">History</span>
+                <History className="h-5 w-5 mr-3" />
+                <span>History</span>
             </Button>
         </div>
 
-        <div className="mt-6">
+        <div>
           {renderContent()}
         </div>
+
+        {/* Mobile Navigation */}
+        <BottomNavigation activeView={activeView} setActiveView={setActiveView} />
     </div>
   );
 }
@@ -123,10 +121,12 @@ export default function Home() {
   }, [])
 
   return (
-    <SettingsProvider>
-      <HistoryProvider>
-        {isClient ? <AppContent /> : null}
-      </HistoryProvider>
-    </SettingsProvider>
+    <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SettingsProvider>
+        <HistoryProvider>
+            {isClient ? <AppContent /> : null}
+        </HistoryProvider>
+        </SettingsProvider>
+    </main>
   );
 }
