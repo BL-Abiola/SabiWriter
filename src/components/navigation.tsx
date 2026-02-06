@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
     Facebook,
@@ -8,58 +8,92 @@ import {
     ShoppingBag,
     Tags,
     Twitter,
+    Share2,
+    ChevronDown
 } from 'lucide-react';
 import { useSettings, type GeneratorId } from '@/context/settings-context';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from "@/components/ui/scroll-area";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 type NavigationProps = {
   activeView: string;
   setActiveView: (view: string) => void;
 };
 
-const allMenuItems: { id: GeneratorId | 'history' ; label: string; icon: React.ElementType }[] = [
+const socialMenuItems: { id: GeneratorId; label: string; icon: React.ElementType }[] = [
     { id: 'instagram', label: 'Instagram', icon: Instagram },
     { id: 'facebook', label: 'Facebook', icon: Facebook },
     { id: 'whatsapp', label: 'WhatsApp', icon: MessageCircle },
     { id: 'twitter', label: 'X / Twitter', icon: Twitter },
+];
+
+const otherMenuItems: { id: 'product' | 'tagline' | 'history' ; label: string; icon: React.ElementType }[] = [
     { id: 'product', label: 'Product', icon: ShoppingBag },
     { id: 'tagline', label: 'Tagline', icon: Tags },
     { id: 'history', label: 'History', icon: History },
 ];
 
+
 export function Navigation({ activeView, setActiveView }: NavigationProps) {
     const { enabledGenerators } = useSettings();
 
-    const menuItems = allMenuItems.filter(item => {
+    const enabledSocialItems = socialMenuItems.filter(item => enabledGenerators[item.id]);
+    const enabledOtherItems = otherMenuItems.filter(item => {
         if (item.id === 'history') return true;
         return enabledGenerators[item.id as GeneratorId];
     });
 
+    const isSocialActive = enabledSocialItems.some(item => item.id === activeView);
+
+    const baseButtonClass = 'group inline-flex items-center gap-2 whitespace-nowrap py-4 px-1 border-b-2 font-medium';
+    const activeClass = 'border-primary text-primary';
+    const inactiveClass = 'border-transparent text-muted-foreground hover:border-border hover:text-foreground';
+
     return (
         <div className="mb-8">
-            <ScrollArea className="w-full">
-                <div className="border-b border-border">
-                    <nav className="-mb-px flex justify-center space-x-2 sm:space-x-4" aria-label="Tabs">
-                        {menuItems.map((tab) => (
+            <div className="border-b border-border">
+                <nav className="-mb-px flex w-full sm:justify-center sm:space-x-4" aria-label="Tabs">
+                    {enabledSocialItems.length > 0 && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className={cn(baseButtonClass, isSocialActive ? activeClass : inactiveClass, 'flex-1 justify-center sm:flex-none')}>
+                                    <Share2 className="h-5 w-5" />
+                                    <span className="hidden sm:inline text-sm">Social</span>
+                                    <ChevronDown className="ml-1 h-4 w-4 hidden sm:inline" />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="center">
+                                {enabledSocialItems.map(item => (
+                                    <DropdownMenuItem key={item.id} onClick={() => setActiveView(item.id)}>
+                                        <item.icon className="mr-2 h-4 w-4" />
+                                        <span>{item.label}</span>
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+
+                    {enabledOtherItems.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveView(tab.id)}
                             className={cn(
-                            'group inline-flex items-center gap-2 whitespace-nowrap py-4 px-1 border-b-2 font-medium',
-                            tab.id === activeView
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
+                                baseButtonClass,
+                                tab.id === activeView ? activeClass : inactiveClass,
+                                'flex-1 justify-center sm:flex-none'
                             )}
                         >
                             <tab.icon className="h-5 w-5" />
                             <span className="hidden sm:inline text-sm">{tab.label}</span>
                         </button>
-                        ))}
-                    </nav>
-                </div>
-            </ScrollArea>
+                    ))}
+                </nav>
+            </div>
         </div>
     );
 }
