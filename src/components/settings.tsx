@@ -23,6 +23,8 @@ import {
     SlidersHorizontal,
     KeyRound,
     Info,
+    Twitter,
+    Mail,
 } from 'lucide-react';
 
 const socialGeneratorOptions: {id: GeneratorId, label: string}[] = [
@@ -102,6 +104,20 @@ export function Settings() {
                     <p className="mt-2 text-foreground/80">
                         Your AI-powered assistant for crafting the perfect bios, taglines, and descriptions for your Nigerian business.
                     </p>
+                </div>
+                <div className="rounded-lg border p-4 text-center">
+                    <h4 className="font-semibold text-foreground">Built by Studio</h4>
+                    <p className="text-sm text-muted-foreground">Your Friendly AI Coding Partner</p>
+                    <div className="mt-4 flex justify-center gap-4">
+                        <a href="https://twitter.com/Firebase" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                            <Twitter className="h-5 w-5" />
+                            <span className="sr-only">Twitter</span>
+                        </a>
+                        <a href="mailto:firebase-support@google.com" className="text-muted-foreground hover:text-primary transition-colors">
+                            <Mail className="h-5 w-5" />
+                            <span className="sr-only">Email</span>
+                        </a>
+                    </div>
                 </div>
                  <div className="rounded-lg border p-4 text-center">
                     <p className="text-sm text-muted-foreground">
