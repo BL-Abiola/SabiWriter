@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DialogClose } from '@/components/ui/dialog';
 
 const socialGeneratorOptions: {id: GeneratorId, label: string}[] = [
     { id: 'instagram', label: 'Instagram Bio' },
@@ -71,7 +72,7 @@ export function Settings() {
             <TabsTrigger value="api">API</TabsTrigger>
         </TabsList>
         <TabsContent value="appearance" className="pt-6">
-            <div className="space-y-2">
+            <div className="max-h-[400px] space-y-2 overflow-y-auto p-1">
                 <div className="flex flex-row items-center justify-between rounded-lg border p-3">
                     <div className="space-y-0.5">
                         <Label htmlFor="dark-mode-switch">Dark Mode</Label>
@@ -80,38 +81,50 @@ export function Settings() {
                     <Switch id="dark-mode-switch" checked={theme === 'dark'} onCheckedChange={toggleTheme} />
                 </div>
             </div>
+            <div className="mt-4 flex justify-end border-t pt-4">
+                <DialogClose asChild>
+                    <Button>Done</Button>
+                </DialogClose>
+            </div>
         </TabsContent>
         <TabsContent value="style" className="pt-6">
-            <div className="rounded-lg border p-3 space-y-3">
-              <div className="flex flex-row items-center justify-between">
-                  <div className="space-y-0.5">
-                      <Label>Tone of Voice</Label>
-                      <p className="text-sm text-muted-foreground">Set the personality for the AI.</p>
-                  </div>
-                  <Select value={tone} onValueChange={setTone}>
-                      <SelectTrigger className="w-[140px]">
-                          <SelectValue placeholder="Select tone" />
-                      </SelectTrigger>
-                      <SelectContent>
-                          <SelectItem value="Nigerian">Nigerian</SelectItem>
-                          <SelectItem value="Professional">Professional</SelectItem>
-                          <SelectItem value="Playful">Playful</SelectItem>
-                          <SelectItem value="Witty">Witty</SelectItem>
-                          <SelectItem value="Inspirational">Inspirational</SelectItem>
-                      </SelectContent>
-                  </Select>
+            <div className="max-h-[400px] space-y-3 overflow-y-auto p-1">
+              <div className="rounded-lg border p-3 space-y-3">
+                <div className="flex flex-row items-center justify-between">
+                    <div className="space-y-0.5">
+                        <Label>Tone of Voice</Label>
+                        <p className="text-sm text-muted-foreground">Set the personality for the AI.</p>
+                    </div>
+                    <Select value={tone} onValueChange={setTone}>
+                        <SelectTrigger className="w-[140px]">
+                            <SelectValue placeholder="Select tone" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="Nigerian">Nigerian</SelectItem>
+                            <SelectItem value="Professional">Professional</SelectItem>
+                            <SelectItem value="Playful">Playful</SelectItem>
+                            <SelectItem value="Witty">Witty</SelectItem>
+                            <SelectItem value="Inspirational">Inspirational</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="flex flex-row items-center justify-between">
+                    <div className="space-y-0.5">
+                        <Label htmlFor="include-emojis-switch">Include Emojis</Label>
+                        <p className="text-sm text-muted-foreground">Add emojis for personality.</p>
+                    </div>
+                    <Switch id="include-emojis-switch" checked={includeEmojis} onCheckedChange={setIncludeEmojis} />
+                </div>
               </div>
-              <div className="flex flex-row items-center justify-between">
-                  <div className="space-y-0.5">
-                      <Label htmlFor="include-emojis-switch">Include Emojis</Label>
-                      <p className="text-sm text-muted-foreground">Add emojis for personality.</p>
-                  </div>
-                  <Switch id="include-emojis-switch" checked={includeEmojis} onCheckedChange={setIncludeEmojis} />
-              </div>
+            </div>
+            <div className="mt-4 flex justify-end border-t pt-4">
+                <DialogClose asChild>
+                    <Button>Done</Button>
+                </DialogClose>
             </div>
         </TabsContent>
         <TabsContent value="generators" className="pt-6">
-            <div className="space-y-4">
+            <div className="max-h-[400px] space-y-4 overflow-y-auto p-1">
                 <div className="rounded-lg border p-3 space-y-3">
                     <div className="space-y-1 mb-2">
                         <Label>Social Platforms</Label>
@@ -157,41 +170,53 @@ export function Settings() {
                     </div>
                 </div>
             </div>
+            <div className="mt-4 flex justify-end border-t pt-4">
+                <DialogClose asChild>
+                    <Button>Done</Button>
+                </DialogClose>
+            </div>
         </TabsContent>
         <TabsContent value="api" className="pt-6">
-            <div className="rounded-lg border p-3 space-y-2">
-              <div className="space-y-1">
-                <Label htmlFor="api-key-input">Google AI API Key</Label>
-                <p className="text-sm text-muted-foreground">
-                Enter your Google AI API key below.
+            <div className="max-h-[400px] space-y-2 overflow-y-auto p-1">
+              <div className="rounded-lg border p-3 space-y-2">
+                <div className="space-y-1">
+                  <Label htmlFor="api-key-input">Google AI API Key</Label>
+                  <p className="text-sm text-muted-foreground">
+                  Enter your Google AI API key below.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="api-key-input"
+                    type="password"
+                    placeholder="Paste your API key here"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button onClick={handleSaveApiKey} variant="secondary">
+                    Save Key
+                  </Button>
+                </div>
+
+                <p className="text-xs text-muted-foreground">
+                  Get your key from{" "}
+                  <a
+                    href="https://aistudio.google.com/app/apikey"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >
+                    Google AI Studio
+                  </a>.
                 </p>
               </div>
-
-              <div className="flex items-center gap-2">
-                <Input
-                  id="api-key-input"
-                  type="password"
-                  placeholder="Paste your API key here"
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  className="flex-1"
-                />
-                <Button onClick={handleSaveApiKey} variant="secondary">
-                  Save Key
-                </Button>
-              </div>
-
-              <p className="text-xs text-muted-foreground">
-                Get your key from{" "}
-                <a
-                  href="https://aistudio.google.com/app/apikey"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline"
-                >
-                  Google AI Studio
-                </a>.
-              </p>
+            </div>
+            <div className="mt-4 flex justify-end border-t pt-4">
+                <DialogClose asChild>
+                    <Button>Done</Button>
+                </DialogClose>
             </div>
         </TabsContent>
     </Tabs>
