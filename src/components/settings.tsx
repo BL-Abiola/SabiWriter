@@ -117,7 +117,7 @@ export function Settings() {
             </TabsTrigger>
         </TabsList>
         <TabsContent value="about" className="pt-6">
-            <div className="max-h-[250px] space-y-4 overflow-y-auto p-1">
+            <div className="max-h-[300px] space-y-4 overflow-y-auto p-1">
                 <div className="rounded-lg border p-4 text-center">
                     <div>
                         <h3 className="font-headline text-2xl font-bold text-primary">NaijaBizBio</h3>
@@ -128,18 +128,7 @@ export function Settings() {
                     </div>
                     <Separator className="my-4" />
                     <div>
-                        <h4 className="font-semibold text-foreground">Built by Studio</h4>
-                        <p className="text-sm text-muted-foreground">Your Friendly AI Coding Partner</p>
-                        <div className="mt-4 flex justify-center gap-4">
-                            <a href="https://twitter.com/Firebase" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                                <Twitter className="h-5 w-5" />
-                                <span className="sr-only">Twitter</span>
-                            </a>
-                            <a href="mailto:firebase-support@google.com" className="text-muted-foreground hover:text-primary transition-colors">
-                                <Mail className="h-5 w-5" />
-                                <span className="sr-only">Email</span>
-                            </a>
-                        </div>
+                        <h4 className="font-semibold text-foreground">Built by BL_Abiola</h4>
                     </div>
                     <Separator className="my-4" />
                     <p className="text-sm text-muted-foreground">
@@ -154,7 +143,7 @@ export function Settings() {
             </div>
         </TabsContent>
         <TabsContent value="api" className="pt-6">
-            <div className="max-h-[250px] space-y-4 overflow-y-auto p-1">
+            <div className="max-h-[300px] space-y-4 overflow-y-auto p-1">
               <div className="rounded-lg border p-4 space-y-2">
                 <div className="space-y-1">
                   <Label htmlFor="api-key-input">Google AI API Key</Label>
@@ -247,7 +236,7 @@ export function Settings() {
             </div>
         </TabsContent>
         <TabsContent value="appearance" className="pt-6">
-            <div className="max-h-[250px] space-y-4 overflow-y-auto p-1">
+            <div className="max-h-[300px] space-y-4 overflow-y-auto p-1">
                 <div className="space-y-3 rounded-lg border p-4">
                     <div className="flex flex-row items-center justify-between">
                         <Label htmlFor="dark-mode-switch" className="font-medium">Dark Mode</Label>
@@ -278,7 +267,7 @@ export function Settings() {
             </div>
         </TabsContent>
         <TabsContent value="generators" className="pt-6">
-            <div className="max-h-[250px] space-y-4 overflow-y-auto p-1">
+            <div className="max-h-[300px] space-y-4 overflow-y-auto p-1">
                 <div className="rounded-lg border p-4">
                     <Label className="font-medium">Social Platforms</Label>
                     <div className="space-y-3 pt-3">
@@ -319,5 +308,3 @@ export function Settings() {
     </Tabs>
   );
 }
-
-    
