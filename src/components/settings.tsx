@@ -98,7 +98,7 @@ export function Settings() {
             </TabsTrigger>
         </TabsList>
         <TabsContent value="about" className="pt-6">
-            <div className="max-h-[400px] space-y-4 overflow-y-auto p-1">
+            <div className="max-h-[250px] space-y-4 overflow-y-auto p-1">
                 <div className="rounded-lg border p-4 text-center">
                     <div>
                         <h3 className="font-headline text-2xl font-bold text-primary">NaijaBizBio</h3>
@@ -135,7 +135,7 @@ export function Settings() {
             </div>
         </TabsContent>
         <TabsContent value="api" className="pt-6">
-            <div className="max-h-[400px] space-y-2 overflow-y-auto p-1">
+            <div className="max-h-[250px] space-y-2 overflow-y-auto p-1">
               <div className="rounded-lg border p-4 space-y-2">
                 <div className="space-y-1">
                   <Label htmlFor="api-key-input">Google AI API Key</Label>
@@ -178,7 +178,7 @@ export function Settings() {
             </div>
         </TabsContent>
         <TabsContent value="appearance" className="pt-6">
-            <div className="max-h-[400px] space-y-2 overflow-y-auto p-1">
+            <div className="max-h-[250px] space-y-2 overflow-y-auto p-1">
                 <div className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <Label htmlFor="dark-mode-switch" className="font-medium">Dark Mode</Label>
                     <Switch id="dark-mode-switch" checked={theme === 'dark'} onCheckedChange={toggleTheme} />
@@ -191,14 +191,9 @@ export function Settings() {
             </div>
         </TabsContent>
         <TabsContent value="generators" className="pt-6">
-            <div className="max-h-[400px] space-y-4 overflow-y-auto p-1">
-                <div className="rounded-lg border p-4 space-y-3">
-                    <div className="space-y-1 mb-3">
-                        <Label>Social Platforms</Label>
-                        <p className="text-sm text-muted-foreground">
-                            Enable or disable specific social media generators.
-                        </p>
-                    </div>
+            <div className="max-h-[250px] space-y-4 overflow-y-auto p-1">
+                <div className="space-y-3">
+                    <Label>Social Platforms</Label>
                     <div className="space-y-3">
                         {socialGeneratorOptions.map(gen => (
                             <div key={gen.id} className="flex flex-row items-center justify-between">
@@ -212,13 +207,9 @@ export function Settings() {
                         ))}
                     </div>
                 </div>
-                <div className="rounded-lg border p-4 space-y-3">
-                    <div className="space-y-1 mb-3">
-                        <Label>Other Tools</Label>
-                        <p className="text-sm text-muted-foreground">
-                            Enable or disable other content creation tools.
-                        </p>
-                    </div>
+                <Separator />
+                <div className="space-y-3">
+                    <Label>Other Tools</Label>
                     <div className="space-y-3">
                         {otherGeneratorOptions.map(gen => (
                             <div key={gen.id} className="flex flex-row items-center justify-between">
@@ -240,8 +231,8 @@ export function Settings() {
             </div>
         </TabsContent>
         <TabsContent value="style" className="pt-6">
-            <div className="max-h-[400px] space-y-3 overflow-y-auto p-1">
-              <div className="rounded-lg border p-4 space-y-4">
+            <div className="max-h-[250px] space-y-3 overflow-y-auto p-1">
+              <div className="space-y-4">
                 <div className="flex flex-row items-center justify-between">
                     <Label>Tone of Voice</Label>
                     <Select value={tone} onValueChange={setTone}>
