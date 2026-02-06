@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { History, Share2, ShoppingBag, Tags, ChevronDown, Instagram, MessageCircle, Twitter } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type View = 'instagram' | 'whatsapp' | 'twitter' | 'tagline' | 'product' | 'history';
 
@@ -45,17 +46,27 @@ function AppContent() {
 
   const isSocialView = ['instagram', 'whatsapp', 'twitter'].includes(activeView);
 
+  const navButtonClasses = (isActive: boolean) =>
+    cn(
+      "flex-1 items-center justify-center text-base py-3 rounded-lg transition-all duration-200 ease-in-out font-medium",
+      isActive
+        ? "bg-primary text-primary-foreground shadow-lg"
+        : "text-muted-foreground bg-transparent hover:bg-primary/10 hover:text-primary"
+    );
+
+  const navIconClasses = "h-5 w-5 mr-2";
+
   return (
     <div className="w-full">
         <Header />
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 my-8">
+        <div className="flex w-full items-center rounded-2xl bg-muted p-1.5 my-8 gap-1.5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant={isSocialView ? 'default' : 'outline'} className="w-full justify-center text-base py-6 shadow-sm">
-                  <Share2 className="h-5 w-5 mr-3" />
+                <Button variant="ghost" className={navButtonClasses(isSocialView)}>
+                  <Share2 className={navIconClasses} />
                   <span>Social</span>
-                  <ChevronDown className="h-4 w-4 ml-2"/>
+                  <ChevronDown className="h-4 w-4 ml-1" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
@@ -75,27 +86,27 @@ function AppContent() {
             </DropdownMenu>
 
             <Button 
-                variant={activeView === 'tagline' ? 'default' : 'outline'}
+                variant="ghost"
                 onClick={() => setActiveView('tagline')}
-                className="w-full justify-center text-base py-6 shadow-sm"
+                className={navButtonClasses(activeView === 'tagline')}
             >
-                <Tags className="h-5 w-5 mr-3" />
+                <Tags className={navIconClasses} />
                 <span>Tagline</span>
             </Button>
             <Button 
-                variant={activeView === 'product' ? 'default' : 'outline'}
+                variant="ghost"
                 onClick={() => setActiveView('product')}
-                className="w-full justify-center text-base py-6 shadow-sm"
+                className={navButtonClasses(activeView === 'product')}
             >
-                <ShoppingBag className="h-5 w-5 mr-3" />
+                <ShoppingBag className={navIconClasses} />
                 <span>Product</span>
             </Button>
             <Button 
-                variant={activeView === 'history' ? 'default' : 'outline'}
+                variant="ghost"
                 onClick={() => setActiveView('history')}
-                className="w-full justify-center text-base py-6 shadow-sm"
+                className={navButtonClasses(activeView === 'history')}
             >
-                <History className="h-5 w-5 mr-3" />
+                <History className={navIconClasses} />
                 <span>History</span>
             </Button>
         </div>
@@ -116,7 +127,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <main className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <SettingsProvider>
         <HistoryProvider>
             {isClient ? <AppContent /> : null}
