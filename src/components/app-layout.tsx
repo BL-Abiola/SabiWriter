@@ -25,7 +25,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/logo';
 import { Settings as SettingsComponent } from '@/components/settings';
@@ -97,9 +96,7 @@ export function AppLayout({
       </Sidebar>
       <SidebarInset>
         <div className="p-4 sm:p-6 lg:p-8">
-            <div className="flex items-center gap-4 mb-8">
-                <SidebarTrigger className="md:hidden"/>
-            </div>
+            <Header />
             {children}
         </div>
       </SidebarInset>

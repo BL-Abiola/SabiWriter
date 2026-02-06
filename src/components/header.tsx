@@ -1,4 +1,5 @@
 import { Logo } from '@/components/logo';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export function Header() {
   return (
@@ -14,6 +15,7 @@ export function Header() {
           </p>
         </div>
       </div>
+      <SidebarTrigger className="md:hidden" />
     </header>
   );
 }
