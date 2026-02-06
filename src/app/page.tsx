@@ -46,14 +46,14 @@ function AppContent() {
 
   const isSocialView = ['instagram', 'whatsapp', 'twitter'].includes(activeView);
 
-  const navItemClasses = "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+  const navItemClasses = "w-full inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-3xl mx-auto">
+        <div className="w-full max-w-5xl mx-auto">
             <Header />
             
-            <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full grid-cols-4 mb-6">
+            <div className="grid w-full grid-cols-4 gap-1 rounded-md bg-muted p-1 text-muted-foreground mb-6">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button 
