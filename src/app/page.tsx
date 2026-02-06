@@ -50,7 +50,7 @@ function AppContent() {
     cn(
       "flex-1 items-center justify-center text-base py-3 rounded-lg transition-all duration-200 ease-in-out font-medium",
       isActive
-        ? "bg-primary text-primary-foreground shadow-lg"
+        ? "bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
         : "text-muted-foreground bg-transparent hover:bg-primary/10 hover:text-primary"
     );
 
