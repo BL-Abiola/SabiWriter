@@ -18,7 +18,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { History, Share2, ShoppingBag, Tags, ChevronDown, Instagram, MessageCircle, Twitter } from 'lucide-react';
-import { BottomNavigation } from '@/components/bottom-navigation';
 
 type View = 'instagram' | 'whatsapp' | 'twitter' | 'tagline' | 'product' | 'history';
 
@@ -47,11 +46,10 @@ function AppContent() {
   const isSocialView = ['instagram', 'whatsapp', 'twitter'].includes(activeView);
 
   return (
-    <div className="w-full pb-24 md:pb-0">
+    <div className="w-full">
         <Header />
         
-        {/* Desktop Navigation */}
-        <div className="hidden md:grid w-full grid-cols-4 gap-2 my-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 my-8">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant={isSocialView ? 'default' : 'outline'} className="w-full justify-center text-base py-6 shadow-sm">
@@ -105,9 +103,6 @@ function AppContent() {
         <div>
           {renderContent()}
         </div>
-
-        {/* Mobile Navigation */}
-        <BottomNavigation activeView={activeView} setActiveView={setActiveView} />
     </div>
   );
 }
