@@ -26,25 +26,22 @@ function AppContent() {
   const [activeView, setActiveView] = useState<View>('instagram');
 
   const renderContent = () => {
-    const content = () => {
-        switch (activeView) {
-            case 'instagram':
-                return <InstagramGenerator />;
-            case 'whatsapp':
-                return <WhatsappGenerator />;
-            case 'twitter':
-                return <TwitterPostGenerator />;
-            case 'tagline':
-                return <TaglineGenerator />;
-            case 'product':
-                return <ProductDescriptionGenerator />;
-            case 'history':
-                return <HistoryPage />;
-            default:
-                return <InstagramGenerator />;
-        }
+    switch (activeView) {
+        case 'instagram':
+            return <InstagramGenerator />;
+        case 'whatsapp':
+            return <WhatsappGenerator />;
+        case 'twitter':
+            return <TwitterPostGenerator />;
+        case 'tagline':
+            return <TaglineGenerator />;
+        case 'product':
+            return <ProductDescriptionGenerator />;
+        case 'history':
+            return <HistoryPage />;
+        default:
+            return <InstagramGenerator />;
     }
-    return <div className="w-full max-w-2xl mx-auto">{content()}</div>;
   }
 
   const isSocialView = ['instagram', 'whatsapp', 'twitter'].includes(activeView);
@@ -52,8 +49,8 @@ function AppContent() {
   const navItemClasses = "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 flex flex-col items-center">
-        <div className="w-full max-w-3xl">
+    <div className="p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-3xl mx-auto">
             <Header />
             
             <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full grid-cols-4 mb-6">

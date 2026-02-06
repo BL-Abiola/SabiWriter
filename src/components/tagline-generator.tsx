@@ -68,7 +68,7 @@ export function TaglineGenerator() {
 
   return (
     <>
-      <Card className="shadow-md max-w-2xl mx-auto">
+      <Card className="shadow-md">
         <CardContent className="pt-6">
           {isPending ? (
             <SkeletonLoader />
