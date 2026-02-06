@@ -37,6 +37,7 @@ import {
     Info,
     Twitter,
     Mail,
+    Trash2,
 } from 'lucide-react';
 
 const socialGeneratorOptions: {id: GeneratorId, label: string}[] = [
@@ -52,8 +53,8 @@ const otherGeneratorOptions: {id: GeneratorId, label: string}[] = [
 ];
 
 export function Settings() {
-  const { 
-    tone, setTone, 
+  const {
+    tone, setTone,
     enabledGenerators, toggleGenerator,
     resetSettings,
   } = useSettings();
@@ -96,11 +97,11 @@ export function Settings() {
   };
 
   return (
-    <Tabs defaultValue="about" className="w-full">
+    <Tabs defaultValue="generators" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="about">
-                <Info className="md:mr-2 h-4 w-4" />
-                <span className="hidden md:inline">About</span>
+            <TabsTrigger value="generators">
+                <SlidersHorizontal className="md:mr-2 h-4 w-4" />
+                <span className="hidden md:inline">Generators</span>
             </TabsTrigger>
             <TabsTrigger value="appearance">
                 <Palette className="md:mr-2 h-4 w-4" />
@@ -110,9 +111,9 @@ export function Settings() {
                 <KeyRound className="md:mr-2 h-4 w-4" />
                 <span className="hidden md:inline">API</span>
             </TabsTrigger>
-            <TabsTrigger value="generators">
-                <SlidersHorizontal className="md:mr-2 h-4 w-4" />
-                <span className="hidden md:inline">Generators</span>
+            <TabsTrigger value="about">
+                <Info className="md:mr-2 h-4 w-4" />
+                <span className="hidden md:inline">About</span>
             </TabsTrigger>
         </TabsList>
         <TabsContent value="about" className="pt-6">
@@ -200,7 +201,7 @@ export function Settings() {
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button variant="outline" className="w-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground">
-                                    Reset All Settings
+                                    <Trash2 className="mr-2" /> Reset All Settings
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -216,11 +217,11 @@ export function Settings() {
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
-                        
+
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button variant="outline" className="w-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground">
-                                    Clear Generation History
+                                    <Trash2 className="mr-2" /> Clear Generation History
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -318,3 +319,5 @@ export function Settings() {
     </Tabs>
   );
 }
+
+    
