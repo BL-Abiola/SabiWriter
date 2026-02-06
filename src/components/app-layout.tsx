@@ -5,7 +5,9 @@ import {
   Instagram,
   MessageCircle,
   Settings,
+  ShoppingBag,
   Tags,
+  Twitter,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,6 +31,7 @@ import {
 import { Logo } from '@/components/logo';
 import { Settings as SettingsComponent } from '@/components/settings';
 import { Header } from '@/components/header';
+import { useSettings, type GeneratorId } from '@/context/settings-context';
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -36,9 +39,11 @@ type AppLayoutProps = {
   setActiveView: (view: string) => void;
 };
 
-const menuItems = [
+const allMenuItems: { id: string; label: string; icon: React.ElementType }[] = [
     { id: 'instagram', label: 'Instagram Bio', icon: Instagram },
     { id: 'whatsapp', label: 'WhatsApp Info', icon: MessageCircle },
+    { id: 'twitter', label: 'X / Twitter', icon: Twitter },
+    { id: 'product', label: 'Product Description', icon: ShoppingBag },
     { id: 'tagline', label: 'Tagline', icon: Tags },
     { id: 'history', label: 'History', icon: History },
 ];
@@ -48,6 +53,13 @@ export function AppLayout({
   activeView,
   setActiveView,
 }: AppLayoutProps) {
+    const { enabledGenerators } = useSettings();
+
+    const menuItems = allMenuItems.filter(item => {
+        if (item.id === 'history') return true;
+        return enabledGenerators[item.id as GeneratorId];
+      });
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -83,13 +95,11 @@ export function AppLayout({
                 </span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-xs rounded-3xl">
+            <DialogContent className="sm:max-w-md rounded-3xl">
               <DialogHeader>
                 <DialogTitle>Settings</DialogTitle>
               </DialogHeader>
-              <div className="py-4">
-                <SettingsComponent />
-              </div>
+              <SettingsComponent />
             </DialogContent>
           </Dialog>
         </SidebarFooter>
