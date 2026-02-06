@@ -60,16 +60,16 @@ export function HistoryPage() {
       <CardContent>
         {history.length > 0 ? (
           <ScrollArea className="h-96">
-            <Accordion type="single" collapsible className="w-full pr-4">
+            <Accordion type="single" collapsible className="w-full space-y-2 pr-4">
               {history.map((item) => (
-                <AccordionItem value={item.id} key={item.id}>
-                  <AccordionTrigger>
+                <AccordionItem value={item.id} key={item.id} className="rounded-lg border">
+                  <AccordionTrigger className="p-4 hover:no-underline">
                     <div className="flex flex-col items-start text-left">
                         <span className="font-semibold">{getTitle(item.type)}</span>
                         <span className="text-sm font-normal text-muted-foreground">{new Date(item.timestamp).toLocaleDateString()}</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent className="px-4">
                     <p className="whitespace-pre-wrap rounded-md bg-muted p-4 text-muted-foreground mb-2">
                         {item.text}
                     </p>
