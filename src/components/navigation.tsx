@@ -8,7 +8,7 @@ import {
     ShoppingBag,
     Tags,
     Twitter,
-    Share2,
+    Users,
     ChevronDown
 } from 'lucide-react';
 import { useSettings, type GeneratorId } from '@/context/settings-context';
@@ -28,8 +28,8 @@ type NavigationProps = {
 const socialMenuItems: { id: GeneratorId; label: string; icon: React.ElementType }[] = [
     { id: 'facebook', label: 'Facebook', icon: Facebook },
     { id: 'instagram', label: 'Instagram', icon: Instagram },
-    { id: 'whatsapp', label: 'WhatsApp', icon: MessageCircle },
     { id: 'twitter', label: 'X / Twitter', icon: Twitter },
+    { id: 'whatsapp', label: 'WhatsApp', icon: MessageCircle },
 ];
 
 const otherMenuItems: { id: 'product' | 'tagline' | 'history' ; label: string; icon: React.ElementType }[] = [
@@ -42,7 +42,10 @@ const otherMenuItems: { id: 'product' | 'tagline' | 'history' ; label: string; i
 export function Navigation({ activeView, setActiveView }: NavigationProps) {
     const { enabledGenerators } = useSettings();
 
-    const enabledSocialItems = socialMenuItems.filter(item => enabledGenerators[item.id]);
+    const enabledSocialItems = socialMenuItems
+        .filter(item => enabledGenerators[item.id])
+        .sort((a, b) => a.label.localeCompare(b.label));
+
     const enabledOtherItems = otherMenuItems.filter(item => {
         if (item.id === 'history') return true;
         return enabledGenerators[item.id as GeneratorId];
@@ -62,7 +65,7 @@ export function Navigation({ activeView, setActiveView }: NavigationProps) {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button className={cn(baseButtonClass, isSocialActive ? activeClass : inactiveClass, 'flex-1 justify-center')}>
-                                    <Share2 className="h-5 w-5" />
+                                    <Users className="h-5 w-5" />
                                     <span className="hidden sm:inline text-sm">Social</span>
                                     <ChevronDown className="ml-1 h-4 w-4 hidden sm:inline" />
                                 </button>
