@@ -147,7 +147,7 @@ export function Settings() {
                                 <span className="sr-only">X</span>
                             </a>
                             <a
-                                href="mailto:contact@blabiola.dev"
+                                href="mailto:Abiolalabs29@Gmail.com"
                                 className="text-muted-foreground hover:text-primary transition-colors"
                             >
                                 <Mail className="h-5 w-5" />
@@ -335,5 +335,3 @@ export function Settings() {
     </Tabs>
   );
 }
-
-    
