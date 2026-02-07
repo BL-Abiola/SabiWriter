@@ -12,6 +12,7 @@ import { TwitterPostGenerator } from '@/components/twitter-post-generator';
 import { FacebookPostGenerator } from '@/components/facebook-post-generator';
 import { HistoryPage } from '@/components/history-page';
 import { Header } from '@/components/header';
+import { AppSkeleton } from '@/components/app-skeleton';
 
 type View = 'instagram' | 'whatsapp' | 'twitter' | 'tagline' | 'product' | 'history' | 'facebook';
 
@@ -73,7 +74,7 @@ export default function Home() {
   return (
     <SettingsProvider>
       <HistoryProvider>
-          {isClient ? <AppContent /> : null}
+          {isClient ? <AppContent /> : <AppSkeleton />}
       </HistoryProvider>
     </SettingsProvider>
   );
