@@ -136,22 +136,22 @@ export function Settings() {
                     <div className="rounded-lg border p-4 text-center">
                         <h4 className="font-semibold text-foreground">Contact</h4>
                         <Separator className="my-4" />
-                        <div className="flex flex-col items-center justify-center space-y-2">
+                        <div className="flex items-center justify-center space-x-4">
                             <a
                                 href="https://twitter.com/BL_Abiola"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                                className="text-muted-foreground hover:text-primary transition-colors"
                             >
-                                <Twitter className="h-4 w-4" />
-                                <span>@BL_Abiola</span>
+                                <Twitter className="h-5 w-5" />
+                                <span className="sr-only">Twitter</span>
                             </a>
                             <a
                                 href="mailto:contact@blabiola.dev"
-                                className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                                className="text-muted-foreground hover:text-primary transition-colors"
                             >
-                                <Mail className="h-4 w-4" />
-                                <span>contact@blabiola.dev</span>
+                                <Mail className="h-5 w-5" />
+                                <span className="sr-only">Email</span>
                             </a>
                         </div>
                     </div>
