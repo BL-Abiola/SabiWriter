@@ -39,7 +39,7 @@ export function InstagramGenerator() {
   const [generation, setGeneration] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
-  const { tone } = useSettings();
+  const { tone, apiKey } = useSettings();
   const { addHistoryItem } = useHistory();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -53,9 +53,18 @@ export function InstagramGenerator() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!apiKey) {
+      toast({
+        variant: 'destructive',
+        title: 'API Key Missing',
+        description: 'Please set your Google AI API key in the settings.',
+      });
+      return;
+    }
+
     startTransition(async () => {
       const apiInput = { ...values, tone };
-      const { bio, error } = await generateInstagramBio(apiInput);
+      const { bio, error } = await generateInstagramBio(apiInput, apiKey);
       if (error) {
         toast({
           variant: 'destructive',

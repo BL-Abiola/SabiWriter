@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSettings, GeneratorId } from '@/context/settings-context';
 import { Switch } from '@/components/ui/switch';
 import { Label } from "@/components/ui/label";
@@ -37,6 +37,7 @@ import {
     Info,
     Trash2,
     Mail,
+    KeyRound,
 } from 'lucide-react';
 import { XLogo } from '@/components/icons/x-logo';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -57,15 +58,22 @@ export function Settings() {
   const {
     tone, setTone,
     enabledGenerators, toggleGenerator,
+    apiKey, setApiKey,
     resetSettings,
   } = useSettings();
-  const [apiKey, setApiKey] = useState('');
+  const [localApiKey, setLocalApiKey] = useState('');
   const { toast } = useToast();
   const { theme, toggleTheme, resetTheme } = useTheme();
   const { clearHistory } = useHistory();
 
+  useEffect(() => {
+    if (apiKey) {
+      setLocalApiKey(apiKey);
+    }
+  }, [apiKey]);
+
   const handleSaveApiKey = () => {
-    if (!apiKey.trim()) {
+    if (!localApiKey.trim()) {
       toast({
         variant: 'destructive',
         title: 'API Key is empty',
@@ -73,24 +81,17 @@ export function Settings() {
       });
       return;
     }
-
-    const envLine = `GEMINI_API_KEY="${apiKey}"`;
-    navigator.clipboard.writeText(envLine);
-
+    setApiKey(localApiKey);
     toast({
-      title: 'Copied to Clipboard!',
-      description: (
-        <div className="space-y-2">
-          <p>Your environment variable is ready.</p>
-          <p>Open the <code className="font-mono text-xs font-bold text-foreground bg-muted p-1 rounded-sm">.env</code> file and paste the copied line.</p>
-        </div>
-      ),
+      title: 'API Key Saved',
+      description: 'Your Google AI API key has been saved to your browser.',
     });
   };
 
   const handleResetSettings = () => {
     resetSettings();
     resetTheme();
+    setLocalApiKey('');
     toast({
       title: 'Settings Reset',
       description: 'All settings have been restored to their default values.',
@@ -168,9 +169,12 @@ export function Settings() {
                 <div className="space-y-4 p-1">
                 <div className="rounded-3xl border p-4 space-y-2">
                     <div className="space-y-1">
-                    <Label htmlFor="api-key-input">Google AI API Key</Label>
+                    <Label htmlFor="api-key-input" className="flex items-center">
+                        <KeyRound className="mr-2 h-4 w-4" />
+                        Google AI API Key
+                    </Label>
                     <p className="text-sm text-muted-foreground">
-                    Enter your Google AI API key below.
+                        Your API key is stored only in your browser and is required for all AI generation features.
                     </p>
                     </div>
 
@@ -179,12 +183,12 @@ export function Settings() {
                         id="api-key-input"
                         type="password"
                         placeholder="Paste your API key here"
-                        value={apiKey}
-                        onChange={(e) => setApiKey(e.target.value)}
+                        value={localApiKey}
+                        onChange={(e) => setLocalApiKey(e.target.value)}
                         className="flex-1"
                     />
                     <Button onClick={handleSaveApiKey} variant="secondary">
-                        Save Key
+                        Save
                     </Button>
                     </div>
 
@@ -200,9 +204,9 @@ export function Settings() {
                     </a>.
                     </p>
                 </div>
-                <div className="rounded-3xl border border-destructive p-4">
+                <div className="rounded-3xl border border-destructive/50 p-4">
                         <div className="mb-4">
-                            <Label className="text-base font-bold text-destructive">Danger Zone</Label>
+                            <Label className="text-base font-semibold text-destructive">Danger Zone</Label>
                             <p className="text-sm text-muted-foreground">
                                 These actions are permanent and cannot be undone.
                             </p>
@@ -212,14 +216,14 @@ export function Settings() {
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button variant="outline" className="w-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground">
-                                        <Trash2 className="mr-2" /> Reset All Settings
+                                        <Trash2 className="mr-2 h-4 w-4" /> Reset All Settings
                                     </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
                                         <AlertDialogTitle>Are you sure you want to reset settings?</AlertDialogTitle>
                                         <AlertDialogDescription>
-                                            This will restore all appearance and generation settings to their original defaults.
+                                            This will restore all appearance and generation settings to their original defaults and clear your saved API key.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
@@ -232,7 +236,7 @@ export function Settings() {
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button variant="outline" className="w-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground">
-                                        <Trash2 className="mr-2" /> Clear Generation History
+                                        <Trash2 className="mr-2 h-4 w-4" /> Clear Generation History
                                     </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 type Tone = 'Nigerian' | 'Professional' | 'Playful' | 'Witty' | 'Inspirational';
 export type GeneratorId = 'instagram' | 'whatsapp' | 'twitter' | 'tagline' | 'product' | 'facebook';
@@ -23,6 +23,8 @@ type SettingsContextType = {
   setTone: (value: Tone) => void;
   enabledGenerators: EnabledGenerators;
   toggleGenerator: (id: GeneratorId) => void;
+  apiKey: string | null;
+  setApiKey: (key: string | null) => void;
   resetSettings: () => void;
 };
 
@@ -33,6 +35,31 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [enabledGenerators, setEnabledGenerators] = useState<EnabledGenerators>(
     defaultSettings.enabledGenerators
   );
+  const [apiKey, setApiKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const storedApiKey = localStorage.getItem('geminiApiKey');
+      if (storedApiKey) {
+        setApiKey(storedApiKey);
+      }
+    } catch (error) {
+      console.error("Failed to load API key from localStorage", error);
+    }
+  }, []);
+
+  const handleSetApiKey = (key: string | null) => {
+    setApiKey(key);
+    try {
+      if (key) {
+        localStorage.setItem('geminiApiKey', key);
+      } else {
+        localStorage.removeItem('geminiApiKey');
+      }
+    } catch (error) {
+      console.error("Failed to save API key to localStorage", error);
+    }
+  };
 
   const toggleGenerator = (id: GeneratorId) => {
     setEnabledGenerators(prev => ({...prev, [id]: !prev[id]}));
@@ -41,6 +68,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const resetSettings = () => {
     setTone(defaultSettings.tone);
     setEnabledGenerators(defaultSettings.enabledGenerators);
+    handleSetApiKey(null);
   }
 
   return (
@@ -50,6 +78,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         setTone,
         enabledGenerators,
         toggleGenerator,
+        apiKey,
+        setApiKey: handleSetApiKey,
         resetSettings,
       }}
     >

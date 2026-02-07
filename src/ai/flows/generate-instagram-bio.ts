@@ -8,8 +8,8 @@
  * - GenerateInstagramBioOutput - The return type for the generateInstagramBio function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { genkit, z } from 'genkit';
+import { googleAI } from '@genkit-ai/google-genai';
 
 const GenerateInstagramBioInputSchema = z.object({
   businessName: z.string().describe('The name of the business.'),
@@ -25,15 +25,20 @@ const GenerateInstagramBioOutputSchema = z.object({
 });
 export type GenerateInstagramBioOutput = z.infer<typeof GenerateInstagramBioOutputSchema>;
 
-export async function generateInstagramBio(input: GenerateInstagramBioInput): Promise<GenerateInstagramBioOutput> {
-  return generateInstagramBioFlow(input);
-}
+export async function generateInstagramBio(
+  input: GenerateInstagramBioInput,
+  apiKey: string
+): Promise<{ bio?: string; error?: { message: string } }> {
+  if (!apiKey) {
+    return { error: { message: 'API key is not configured. Please add it in the settings.' } };
+  }
 
-const prompt = ai.definePrompt({
-  name: 'generateInstagramBioPrompt',
-  input: {schema: GenerateInstagramBioInputSchema},
-  output: {schema: GenerateInstagramBioOutputSchema},
-  prompt: `You are a world-class social media copywriter specializing in viral Instagram bios.
+  const ai = genkit({
+    plugins: [googleAI({ apiKey })],
+    model: 'googleai/gemini-2.5-flash',
+  });
+
+  const prompt = `You are a world-class social media copywriter specializing in viral Instagram bios.
 
 Your task is to generate **3 unique Instagram bio options** based on the details provided. Each bio must be under 150 characters.
 
@@ -43,27 +48,28 @@ Your task is to generate **3 unique Instagram bio options** based on the details
 3.  **Call to Action (CTA):** End with a clear instruction for the user.
 
 **Business Details:**
-*   **Name:** {{{businessName}}}
-*   **Description:** {{{businessDescription}}}
-*   **Value Proposition:** {{{valueProposition}}}
-*   **Call to Action:** {{{callToAction}}}
+*   **Name:** ${input.businessName}
+*   **Description:** ${input.businessDescription}
+*   **Value Proposition:** ${input.valueProposition}
+*   **Call to Action:** ${input.callToAction}
 
 **Style Guidelines:**
-*   **Tone:** Your tone should be: **{{{tone}}}**. If the tone is 'Nigerian', feel free to use popular, positive slang like 'No wahala', 'Sabi', or 'Naija-made'. Keep it authentic and not over-the-top.
+*   **Tone:** Your tone should be: **${input.tone}**. If the tone is 'Nigerian', feel free to use popular, positive slang like 'No wahala', 'Sabi', or 'Naija-made'. Keep it authentic and not over-the-top.
 *   **Emojis:** Weave in relevant emojis to add personality and break up the text.
 
 Format your response as a single block of text. Present the 3 bios as a numbered list, separated by a blank line.
-  `,
-});
+  `;
 
-const generateInstagramBioFlow = ai.defineFlow(
-  {
-    name: 'generateInstagramBioFlow',
-    inputSchema: GenerateInstagramBioInputSchema,
-    outputSchema: GenerateInstagramBioOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  try {
+    const { output } = await ai.generate({
+      prompt,
+      model: 'googleai/gemini-2.5-flash',
+      output: {
+        schema: GenerateInstagramBioOutputSchema,
+      },
+    });
+    return { bio: output!.bio };
+  } catch (e: any) {
+    return { error: { message: e.message || 'Failed to generate content.' } };
   }
-);
+}

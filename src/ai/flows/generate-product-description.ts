@@ -8,8 +8,8 @@
  * - GenerateProductDescriptionOutput - The return type for the generateProductDescription function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { genkit, z } from 'genkit';
+import { googleAI } from '@genkit-ai/google-genai';
 
 const GenerateProductDescriptionInputSchema = z.object({
   productName: z.string().describe('The name of the product.'),
@@ -23,40 +23,46 @@ const GenerateProductDescriptionOutputSchema = z.object({
 });
 export type GenerateProductDescriptionOutput = z.infer<typeof GenerateProductDescriptionOutputSchema>;
 
-export async function generateProductDescription(input: GenerateProductDescriptionInput): Promise<GenerateProductDescriptionOutput> {
-  return generateProductDescriptionFlow(input);
-}
+export async function generateProductDescription(
+  input: GenerateProductDescriptionInput,
+  apiKey: string
+): Promise<{ description?: string; error?: { message: string } }> {
+  if (!apiKey) {
+    return { error: { message: 'API key is not configured. Please add it in the settings.' } };
+  }
 
-const prompt = ai.definePrompt({
-  name: 'generateProductDescriptionPrompt',
-  input: {schema: GenerateProductDescriptionInputSchema},
-  output: {schema: GenerateProductDescriptionOutputSchema},
-  prompt: `You are a world-class e-commerce copywriter known for writing product descriptions that sell.
+  const ai = genkit({
+    plugins: [googleAI({ apiKey })],
+    model: 'googleai/gemini-2.5-flash',
+  });
+
+  const prompt = `You are a world-class e-commerce copywriter known for writing product descriptions that sell.
 
 Your task is to generate **3 unique product description options** based on the details provided.
 
 **Product Details:**
-*   **Name:** {{{productName}}}
-*   **Features/Description:** {{{productFeatures}}}
+*   **Name:** ${input.productName}
+*   **Features/Description:** ${input.productFeatures}
 
 **Style Guidelines:**
-*   **Tone:** Your tone should be: **{{{tone}}}**.
+*   **Tone:** Your tone should be: **${input.tone}**.
 *   **Emojis:** Weave in relevant emojis to make the description more engaging.
 
 Focus on benefits over features. Paint a picture for the customer and make them feel like they need this product.
 
 Format your response as a single block of text. Present the 3 descriptions as a numbered list, separated by a blank line.
-  `,
-});
+  `;
 
-const generateProductDescriptionFlow = ai.defineFlow(
-  {
-    name: 'generateProductDescriptionFlow',
-    inputSchema: GenerateProductDescriptionInputSchema,
-    outputSchema: GenerateProductDescriptionOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  try {
+    const { output } = await ai.generate({
+      prompt,
+      model: 'googleai/gemini-2.5-flash',
+      output: {
+        schema: GenerateProductDescriptionOutputSchema,
+      },
+    });
+    return { description: output!.description };
+  } catch (e: any) {
+    return { error: { message: e.message || 'Failed to generate content.' } };
   }
-);
+}
