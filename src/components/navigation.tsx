@@ -57,11 +57,11 @@ export function Navigation({ activeView, setActiveView }: NavigationProps) {
     return (
         <div className="mb-8">
             <div className="border-b border-border">
-                <nav className="-mb-px flex w-full sm:justify-center sm:space-x-4" aria-label="Tabs">
+                <nav className="-mb-px flex w-full" aria-label="Tabs">
                     {enabledSocialItems.length > 0 && (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <button className={cn(baseButtonClass, isSocialActive ? activeClass : inactiveClass, 'flex-1 justify-center sm:flex-none')}>
+                                <button className={cn(baseButtonClass, isSocialActive ? activeClass : inactiveClass, 'flex-1 justify-center')}>
                                     <Share2 className="h-5 w-5" />
                                     <span className="hidden sm:inline text-sm">Social</span>
                                     <ChevronDown className="ml-1 h-4 w-4 hidden sm:inline" />
@@ -85,7 +85,7 @@ export function Navigation({ activeView, setActiveView }: NavigationProps) {
                             className={cn(
                                 baseButtonClass,
                                 tab.id === activeView ? activeClass : inactiveClass,
-                                'flex-1 justify-center sm:flex-none'
+                                'flex-1 justify-center'
                             )}
                         >
                             <tab.icon className="h-5 w-5" />
