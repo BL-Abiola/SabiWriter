@@ -31,7 +31,7 @@ export function Header() {
             <span className="sr-only">Settings</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md rounded-3xl">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Settings</DialogTitle>
           </DialogHeader>
