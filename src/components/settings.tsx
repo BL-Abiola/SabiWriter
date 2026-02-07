@@ -36,6 +36,8 @@ import {
     Database,
     Info,
     Trash2,
+    Mail,
+    Twitter
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -129,6 +131,28 @@ export function Settings() {
                         <Separator className="my-4" />
                         <div>
                             <h4 className="font-semibold text-foreground">Built by BL_Abiola</h4>
+                        </div>
+                    </div>
+                    <div className="rounded-lg border p-4 text-center">
+                        <h4 className="font-semibold text-foreground">Contact</h4>
+                        <Separator className="my-4" />
+                        <div className="flex flex-col items-center justify-center space-y-2">
+                            <a
+                                href="https://twitter.com/BL_Abiola"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                            >
+                                <Twitter className="h-4 w-4" />
+                                <span>@BL_Abiola</span>
+                            </a>
+                            <a
+                                href="mailto:contact@blabiola.dev"
+                                className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                            >
+                                <Mail className="h-4 w-4" />
+                                <span>contact@blabiola.dev</span>
+                            </a>
                         </div>
                     </div>
                 </div>
