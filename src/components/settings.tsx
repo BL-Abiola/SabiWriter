@@ -118,10 +118,10 @@ export function Settings() {
             <div className="max-h-[220px] space-y-4 overflow-y-auto p-1">
                 <div className="rounded-lg border p-4 text-center">
                     <div>
-                        <h3 className="font-headline text-2xl font-bold text-primary">NaijaBizBio</h3>
+                        <h3 className="font-headline text-2xl font-bold text-primary">SabiWriter</h3>
                         <p className="text-sm text-muted-foreground">Version 1.0.0</p>
                         <p className="mt-2 text-foreground/80">
-                            Your AI-powered assistant for crafting the perfect bios, taglines, and descriptions for your Nigerian business.
+                            Your AI-powered assistant for crafting expert content for your Nigerian business.
                         </p>
                     </div>
                     <Separator className="my-4" />

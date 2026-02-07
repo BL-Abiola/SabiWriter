@@ -5,8 +5,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/context/theme-context';
 
 export const metadata: Metadata = {
-  title: 'NaijaBizBio',
-  description: 'AI-powered bio and tagline generator for Nigerian businesses.',
+  title: 'SabiWriter',
+  description: 'AI-powered content generator for Nigerian businesses.',
 };
 
 export default function RootLayout({

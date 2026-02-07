@@ -17,7 +17,7 @@ export function Header() {
         <Logo />
         <div>
           <h1 className="font-headline text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-            NaijaBizBio
+            SabiWriter
           </h1>
           <p className="mt-1 text-base text-foreground/80">
             Ready to stand out online?

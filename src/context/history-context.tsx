@@ -25,7 +25,7 @@ export function HistoryProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const storedHistory = localStorage.getItem('naijaBizBioHistory');
+      const storedHistory = localStorage.getItem('sabiWriterHistory');
       if (storedHistory) {
         setHistory(JSON.parse(storedHistory));
       }
@@ -36,7 +36,7 @@ export function HistoryProvider({ children }: { children: ReactNode }) {
 
   const updateLocalStorage = (updatedHistory: HistoryItem[]) => {
     try {
-      localStorage.setItem('naijaBizBioHistory', JSON.stringify(updatedHistory));
+      localStorage.setItem('sabiWriterHistory', JSON.stringify(updatedHistory));
     } catch (error) {
       console.error("Failed to save history to localStorage", error);
     }
