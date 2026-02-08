@@ -13,14 +13,25 @@ import { FacebookPostGenerator } from '@/components/facebook-post-generator';
 import { HistoryPage } from '@/components/history-page';
 import { Header } from '@/components/header';
 import { AppSkeleton } from '@/components/app-skeleton';
+import { OnboardingDialog } from '@/components/onboarding-dialog';
 
 type View = 'instagram' | 'whatsapp' | 'twitter' | 'tagline' | 'product' | 'history' | 'facebook';
 
 function AppContent() {
   const [activeView, setActiveView] = useState<View>('instagram');
   const { enabledGenerators } = useSettings();
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
 
   useEffect(() => {
+    try {
+        const hasSeenOnboarding = localStorage.getItem('sabiWriterOnboardingComplete');
+        if (!hasSeenOnboarding) {
+            setIsOnboardingOpen(true);
+        }
+    } catch (error) {
+        console.error("Failed to read from localStorage", error);
+    }
+
     // If the active view is no longer enabled, switch to the first available one.
     if (activeView !== 'history' && !enabledGenerators[activeView as GeneratorId]) {
         const firstEnabled = Object.keys(enabledGenerators).find(
@@ -30,6 +41,15 @@ function AppContent() {
         setActiveView(firstEnabled || 'instagram');
     }
   }, [enabledGenerators, activeView]);
+
+  const handleOnboardingComplete = () => {
+    try {
+        localStorage.setItem('sabiWriterOnboardingComplete', 'true');
+    } catch (error) {
+        console.error("Failed to save to localStorage", error);
+    }
+    setIsOnboardingOpen(false);
+  };
 
   const renderContent = () => {
     switch (activeView) {
@@ -53,13 +73,16 @@ function AppContent() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-        <div className="mx-auto max-w-4xl">
-            <Header />
-            <Navigation activeView={activeView} setActiveView={setActiveView} />
-            {renderContent()}
-        </div>
-    </div>
+    <>
+      <OnboardingDialog isOpen={isOnboardingOpen} onComplete={handleOnboardingComplete} />
+      <div className="p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto max-w-4xl">
+              <Header />
+              <Navigation activeView={activeView} setActiveView={setActiveView} />
+              {renderContent()}
+          </div>
+      </div>
+    </>
   );
 }
 
