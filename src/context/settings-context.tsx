@@ -18,6 +18,8 @@ const defaultSettings = {
   },
 };
 
+const ONBOARDING_STORAGE_KEY = 'sabiWriterOnboardingComplete';
+
 type SettingsContextType = {
   tone: Tone;
   setTone: (value: Tone) => void;
@@ -26,6 +28,8 @@ type SettingsContextType = {
   apiKey: string | null;
   setApiKey: (key: string | null) => void;
   resetSettings: () => void;
+  isOnboardingComplete: boolean;
+  completeOnboarding: () => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -36,6 +40,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     defaultSettings.enabledGenerators
   );
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const [isOnboardingComplete, setIsOnboardingComplete] = useState(true);
 
   useEffect(() => {
     try {
@@ -43,8 +48,12 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       if (storedApiKey) {
         setApiKey(storedApiKey);
       }
+      const storedOnboardingStatus = localStorage.getItem(ONBOARDING_STORAGE_KEY);
+      if (!storedOnboardingStatus) {
+        setIsOnboardingComplete(false);
+      }
     } catch (error) {
-      console.error("Failed to load API key from localStorage", error);
+      console.error("Failed to access localStorage", error);
     }
   }, []);
 
@@ -65,10 +74,25 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setEnabledGenerators(prev => ({...prev, [id]: !prev[id]}));
   };
 
+  const completeOnboarding = () => {
+    setIsOnboardingComplete(true);
+    try {
+        localStorage.setItem(ONBOARDING_STORAGE_KEY, 'true');
+    } catch (error) {
+        console.error("Failed to save onboarding status to localStorage", error);
+    }
+  };
+
   const resetSettings = () => {
     setTone(defaultSettings.tone);
     setEnabledGenerators(defaultSettings.enabledGenerators);
     handleSetApiKey(null);
+    setIsOnboardingComplete(false);
+    try {
+        localStorage.removeItem(ONBOARDING_STORAGE_KEY);
+    } catch (error) {
+        console.error("Failed to remove onboarding status from localStorage", error);
+    }
   }
 
   return (
@@ -81,6 +105,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         apiKey,
         setApiKey: handleSetApiKey,
         resetSettings,
+        isOnboardingComplete,
+        completeOnboarding,
       }}
     >
       {children}

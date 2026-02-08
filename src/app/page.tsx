@@ -19,19 +19,9 @@ type View = 'instagram' | 'whatsapp' | 'twitter' | 'tagline' | 'product' | 'hist
 
 function AppContent() {
   const [activeView, setActiveView] = useState<View>('instagram');
-  const { enabledGenerators } = useSettings();
-  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const { enabledGenerators, isOnboardingComplete, completeOnboarding } = useSettings();
 
   useEffect(() => {
-    try {
-        const hasSeenOnboarding = localStorage.getItem('sabiWriterOnboardingComplete');
-        if (!hasSeenOnboarding) {
-            setIsOnboardingOpen(true);
-        }
-    } catch (error) {
-        console.error("Failed to read from localStorage", error);
-    }
-
     // If the active view is no longer enabled, switch to the first available one.
     if (activeView !== 'history' && !enabledGenerators[activeView as GeneratorId]) {
         const firstEnabled = Object.keys(enabledGenerators).find(
@@ -41,15 +31,6 @@ function AppContent() {
         setActiveView(firstEnabled || 'instagram');
     }
   }, [enabledGenerators, activeView]);
-
-  const handleOnboardingComplete = () => {
-    try {
-        localStorage.setItem('sabiWriterOnboardingComplete', 'true');
-    } catch (error) {
-        console.error("Failed to save to localStorage", error);
-    }
-    setIsOnboardingOpen(false);
-  };
 
   const renderContent = () => {
     switch (activeView) {
@@ -74,7 +55,7 @@ function AppContent() {
 
   return (
     <>
-      <OnboardingDialog isOpen={isOnboardingOpen} onComplete={handleOnboardingComplete} />
+      <OnboardingDialog isOpen={!isOnboardingComplete} onComplete={completeOnboarding} />
       <div className="p-4 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-4xl">
               <Header />
